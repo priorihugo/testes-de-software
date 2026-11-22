@@ -209,7 +209,7 @@ public class TestSetFunc {
 		assertFim(saida, true, 4);
 	}
 
-	/** CT20: V1–V6, V8, V11, V13, V15–V22, V25, V29, V32, V36. */
+	/** CT20: V1–V6, V8, V11, V13, V15–V22, V25, V29. */
 	@Test
 	public void ct20() throws IOException {
 		String saida = jogar(Aquario.inicializar("1", "4", "1", "2", "3", "3", "3", "3", "B B . A"), "E\n");

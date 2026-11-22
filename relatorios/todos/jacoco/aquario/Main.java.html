@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Aquário - todos</a> &gt; <a href="index.source.html" class="el_package">aquario</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package aquario;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+
+/** Interface de console: lê os parâmetros e a matriz e inicia o jogo. */
+<span class="nc" id="L9">public class Main {</span>
+
+<span class="fc" id="L11">	private static final String[] PARAMETROS = { &quot;M&quot;, &quot;N&quot;, &quot;X&quot;, &quot;Y&quot;, &quot;RA&quot;, &quot;MA&quot;, &quot;RB&quot;, &quot;MB&quot; };</span>
+
+	public static void main(String[] args) throws IOException {
+<span class="fc" id="L14">		executar(new BufferedReader(new InputStreamReader(System.in, &quot;UTF-8&quot;)), System.out);</span>
+<span class="fc" id="L15">	}</span>
+
+	/**
+	 * Lê M, N, X, Y, RA, MA, RB, MB e as M linhas da matriz (células separadas
+	 * por espaço, com A, B ou .) e executa a partida.
+	 *
+	 * @return pontuação final, ou -1 se a inicialização for recusada
+	 */
+	static int executar(BufferedReader entrada, PrintStream saida) throws IOException {
+<span class="fc" id="L24">		String[] valores = new String[PARAMETROS.length];</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">		for (int k = 0; k &lt; PARAMETROS.length; k++) {</span>
+<span class="fc" id="L26">			saida.print(PARAMETROS[k] + &quot;: &quot;);</span>
+<span class="fc" id="L27">			valores[k] = lerLinha(entrada);</span>
+		}
+		int linhas;
+		try {
+<span class="fc" id="L31">			linhas = Integer.parseInt(valores[0].trim());</span>
+<span class="fc" id="L32">		} catch (NumberFormatException e) {</span>
+<span class="fc" id="L33">			linhas = 0;</span>
+<span class="fc" id="L34">		}</span>
+<span class="fc" id="L35">		StringBuilder matriz = new StringBuilder();</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		for (int i = 0; i &lt; linhas; i++) {</span>
+<span class="fc" id="L37">			saida.print(&quot;Linha &quot; + (i + 1) + &quot; da matriz: &quot;);</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">			if (i &gt; 0) {</span>
+<span class="nc" id="L39">				matriz.append(';');</span>
+			}
+<span class="fc" id="L41">			matriz.append(lerLinha(entrada));</span>
+		}
+		try {
+<span class="fc" id="L44">			Aquario aquario = Aquario.inicializar(valores[0], valores[1], valores[2], valores[3], valores[4],</span>
+<span class="fc" id="L45">					valores[5], valores[6], valores[7], matriz.toString());</span>
+<span class="fc" id="L46">			saida.println(&quot;Matriz inicial: &quot; + aquario.getMatriz());</span>
+<span class="fc" id="L47">			return Jogo.executar(aquario, entrada, saida);</span>
+<span class="fc" id="L48">		} catch (EntradaInvalidaException e) {</span>
+<span class="fc" id="L49">			saida.println(&quot;Inicialização recusada: &quot; + e.getMessage());</span>
+<span class="fc" id="L50">			return -1;</span>
+		}
+	}
+
+	private static String lerLinha(BufferedReader entrada) throws IOException {
+<span class="fc" id="L55">		String linha = entrada.readLine();</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">		return linha == null ? &quot;&quot; : linha;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

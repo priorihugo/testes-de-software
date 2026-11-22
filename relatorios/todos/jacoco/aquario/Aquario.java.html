@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Aquario.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Aquário - todos</a> &gt; <a href="index.source.html" class="el_package">aquario</a> &gt; <span class="el_source">Aquario.java</span></div><h1>Aquario.java</h1><pre class="source lang-java linenums">package aquario;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Estado e regras do Jogo do Aquário.
+ *
+ * A matriz usa a notação da Parte I: linhas separadas por &quot;;&quot;, células separadas
+ * por espaço, &quot;A&quot; e &quot;B&quot; para os peixes e &quot;.&quot; para célula vazia, por exemplo
+ * &quot;[A . .; . . B]&quot;. Os colchetes são opcionais na entrada.
+ */
+public class Aquario {
+
+	/** Ordem de desempate dos destinos: acima, abaixo, esquerda, direita (D01, D05). */
+<span class="fc" id="L17">	private static final int[][] DIRECOES = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };</span>
+
+	private final int linhas;
+	private final int colunas;
+	private final int ra;
+	private final int ma;
+	private final int rb;
+	private final int mb;
+	private final Peixe[][] grade;
+	private int pontuacao;
+
+<span class="fc" id="L28">	private Aquario(int linhas, int colunas, int ra, int ma, int rb, int mb, Peixe[][] grade) {</span>
+<span class="fc" id="L29">		this.linhas = linhas;</span>
+<span class="fc" id="L30">		this.colunas = colunas;</span>
+<span class="fc" id="L31">		this.ra = ra;</span>
+<span class="fc" id="L32">		this.ma = ma;</span>
+<span class="fc" id="L33">		this.rb = rb;</span>
+<span class="fc" id="L34">		this.mb = mb;</span>
+<span class="fc" id="L35">		this.grade = grade;</span>
+<span class="fc" id="L36">	}</span>
+
+	/**
+	 * Valida os parâmetros e cria o aquário (D02, D03). A validação segue a ordem:
+	 * domínio numérico, estrutura da matriz, conteúdo das células e contagens.
+	 *
+	 * @throws EntradaInvalidaException se alguma condição de entrada for inválida
+	 */
+	public static Aquario inicializar(String m, String n, String x, String y, String ra, String ma,
+			String rb, String mb, String matriz) {
+<span class="fc" id="L46">		int vx = inteiroPositivo(&quot;X&quot;, x);</span>
+<span class="fc" id="L47">		int vy = inteiroPositivo(&quot;Y&quot;, y);</span>
+<span class="fc" id="L48">		int vra = inteiroPositivo(&quot;RA&quot;, ra);</span>
+<span class="fc" id="L49">		int vma = inteiroPositivo(&quot;MA&quot;, ma);</span>
+<span class="fc" id="L50">		int vrb = inteiroPositivo(&quot;RB&quot;, rb);</span>
+<span class="fc" id="L51">		int vmb = inteiroPositivo(&quot;MB&quot;, mb);</span>
+<span class="fc" id="L52">		int vm = inteiroPositivo(&quot;M&quot;, m);</span>
+<span class="fc" id="L53">		int vn = inteiroPositivo(&quot;N&quot;, n);</span>
+
+<span class="fc" id="L55">		String[][] celulas = lerMatriz(matriz);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">		if (celulas.length != vm) {</span>
+<span class="fc" id="L57">			throw new EntradaInvalidaException(&quot;A matriz tem &quot; + celulas.length + &quot; linha(s), mas M=&quot; + vm);</span>
+		}
+<span class="fc bfc" id="L59" title="All 2 branches covered.">		for (int i = 0; i &lt; vm; i++) {</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">			if (celulas[i].length != vn) {</span>
+<span class="fc" id="L61">				throw new EntradaInvalidaException(</span>
+						&quot;A linha &quot; + (i + 1) + &quot; tem &quot; + celulas[i].length + &quot; célula(s), mas N=&quot; + vn);
+			}
+		}
+
+<span class="fc" id="L66">		Peixe[][] grade = new Peixe[vm][vn];</span>
+<span class="fc" id="L67">		int contaA = 0;</span>
+<span class="fc" id="L68">		int contaB = 0;</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">		for (int i = 0; i &lt; vm; i++) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">			for (int j = 0; j &lt; vn; j++) {</span>
+<span class="fc" id="L71">				String s = celulas[i][j];</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">				if (s.equals(&quot;A&quot;)) {</span>
+<span class="fc" id="L73">					grade[i][j] = new Peixe(Tipo.A, i, j);</span>
+<span class="fc" id="L74">					contaA++;</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">				} else if (s.equals(&quot;B&quot;)) {</span>
+<span class="fc" id="L76">					grade[i][j] = new Peixe(Tipo.B, i, j);</span>
+<span class="fc" id="L77">					contaB++;</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">				} else if (!s.equals(&quot;.&quot;)) {</span>
+<span class="fc" id="L79">					throw new EntradaInvalidaException(</span>
+							&quot;Símbolo inválido \&quot;&quot; + s + &quot;\&quot; na célula (&quot; + (i + 1) + &quot;,&quot; + (j + 1) + &quot;)&quot;);
+				}
+			}
+		}
+<span class="fc bfc" id="L84" title="All 2 branches covered.">		if (contaA != vx) {</span>
+<span class="fc" id="L85">			throw new EntradaInvalidaException(&quot;A matriz tem &quot; + contaA + &quot; peixe(s) A, mas X=&quot; + vx);</span>
+		}
+<span class="fc bfc" id="L87" title="All 2 branches covered.">		if (contaB != vy) {</span>
+<span class="fc" id="L88">			throw new EntradaInvalidaException(&quot;A matriz tem &quot; + contaB + &quot; peixe(s) B, mas Y=&quot; + vy);</span>
+		}
+<span class="fc" id="L90">		return new Aquario(vm, vn, vra, vma, vrb, vmb, grade);</span>
+	}
+
+	private static int inteiroPositivo(String nome, String valor) {
+		BigDecimal numero;
+		try {
+<span class="fc" id="L96">			numero = new BigDecimal(valor.trim());</span>
+<span class="fc" id="L97">		} catch (NumberFormatException e) {</span>
+<span class="fc" id="L98">			throw new EntradaInvalidaException(nome + &quot;=&quot; + valor + &quot; não é um número&quot;);</span>
+<span class="fc" id="L99">		}</span>
+<span class="fc bfc" id="L100" title="All 4 branches covered.">		if (numero.signum() != 0 &amp;&amp; numero.stripTrailingZeros().scale() &gt; 0) {</span>
+<span class="fc" id="L101">			throw new EntradaInvalidaException(nome + &quot;=&quot; + valor + &quot; não é inteiro&quot;);</span>
+		}
+<span class="fc bfc" id="L103" title="All 2 branches covered.">		if (numero.signum() &lt;= 0) {</span>
+<span class="fc" id="L104">			throw new EntradaInvalidaException(nome + &quot;=&quot; + valor + &quot; não é positivo&quot;);</span>
+		}
+		try {
+<span class="fc" id="L107">			return numero.intValueExact();</span>
+<span class="fc" id="L108">		} catch (ArithmeticException e) {</span>
+<span class="fc" id="L109">			throw new EntradaInvalidaException(nome + &quot;=&quot; + valor + &quot; é grande demais&quot;);</span>
+		}
+	}
+
+	private static String[][] lerMatriz(String matriz) {
+<span class="fc" id="L114">		String texto = matriz.trim();</span>
+<span class="fc bfc" id="L115" title="All 4 branches covered.">		if (texto.startsWith(&quot;[&quot;) &amp;&amp; texto.endsWith(&quot;]&quot;)) {</span>
+<span class="fc" id="L116">			texto = texto.substring(1, texto.length() - 1);</span>
+		}
+<span class="fc" id="L118">		String[] partes = texto.split(&quot;;&quot;, -1);</span>
+<span class="fc" id="L119">		String[][] celulas = new String[partes.length][];</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">		for (int i = 0; i &lt; partes.length; i++) {</span>
+<span class="fc" id="L121">			String linha = partes[i].trim();</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">			celulas[i] = linha.isEmpty() ? new String[0] : linha.split(&quot;\\s+&quot;);</span>
+		}
+<span class="fc" id="L124">		return celulas;</span>
+	}
+
+	/**
+	 * Executa uma iteração (D04): cada peixe existente no início age uma vez, em
+	 * ordem de linha e coluna, sobre a matriz já atualizada pelos anteriores.
+	 * Peixes mortos ou consumidos não agem; filhos só agem na próxima iteração.
+	 */
+	public void iterar() {
+<span class="fc" id="L133">		List&lt;Peixe&gt; ordem = new ArrayList&lt;Peixe&gt;();</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">		for (int i = 0; i &lt; linhas; i++) {</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">			for (int j = 0; j &lt; colunas; j++) {</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">				if (grade[i][j] != null) {</span>
+<span class="fc" id="L137">					ordem.add(grade[i][j]);</span>
+				}
+			}
+		}
+<span class="fc bfc" id="L141" title="All 2 branches covered.">		for (Peixe p : ordem) {</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">			if (!p.vivo) {</span>
+<span class="fc" id="L143">				continue;</span>
+			}
+<span class="fc bfc" id="L145" title="All 2 branches covered.">			if (p.tipo == Tipo.A) {</span>
+<span class="fc" id="L146">				agirA(p);</span>
+			} else {
+<span class="fc" id="L148">				agirB(p);</span>
+			}
+<span class="fc" id="L150">		}</span>
+<span class="fc" id="L151">		pontuacao++;</span>
+<span class="fc" id="L152">	}</span>
+
+	/** Movimento, morte e reprodução de A (D06, D09, D10). */
+	private void agirA(Peixe p) {
+<span class="fc" id="L156">		int[] livre = vizinhoVazio(p);</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">		if (livre != null) {</span>
+<span class="fc" id="L158">			mover(p, livre);</span>
+<span class="fc" id="L159">			p.movimentos++;</span>
+<span class="fc" id="L160">			p.fome = 0;</span>
+		} else {
+<span class="fc" id="L162">			p.movimentos = 0;</span>
+<span class="fc" id="L163">			p.fome++;</span>
+		}
+<span class="fc bfc" id="L165" title="All 2 branches covered.">		if (p.fome &gt;= ma) {</span>
+<span class="fc" id="L166">			remover(p);</span>
+<span class="fc" id="L167">			return;</span>
+		}
+<span class="fc bfc" id="L169" title="All 2 branches covered.">		if (p.movimentos &gt;= ra) {</span>
+<span class="fc" id="L170">			int[] destino = vizinhoVazio(p);</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">			if (destino != null) {</span>
+<span class="fc" id="L172">				nascer(Tipo.A, destino);</span>
+<span class="fc" id="L173">				p.movimentos = 0;</span>
+			}
+		}
+<span class="fc" id="L176">	}</span>
+
+	/** Alimentação, movimento, morte e reprodução de B (D07, D08, D09, D10). */
+	private void agirB(Peixe p) {
+<span class="fc" id="L180">		int[] presa = vizinhoDoTipo(p, Tipo.A);</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">		if (presa != null) {</span>
+<span class="fc" id="L182">			grade[presa[0]][presa[1]].vivo = false;</span>
+<span class="fc" id="L183">			mover(p, presa);</span>
+<span class="fc" id="L184">			p.consumos++;</span>
+<span class="fc" id="L185">			p.fome = 0;</span>
+		} else {
+<span class="fc" id="L187">			int[] livre = vizinhoVazio(p);</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">			if (livre != null) {</span>
+<span class="fc" id="L189">				mover(p, livre);</span>
+			}
+<span class="fc" id="L191">			p.fome++;</span>
+		}
+<span class="fc bfc" id="L193" title="All 2 branches covered.">		if (p.fome &gt;= mb) {</span>
+<span class="fc" id="L194">			remover(p);</span>
+<span class="fc" id="L195">			return;</span>
+		}
+<span class="fc bfc" id="L197" title="All 4 branches covered.">		if (p.consumos &gt;= rb &amp;&amp; vizinhoDoTipo(p, Tipo.B) == null) {</span>
+<span class="fc" id="L198">			int[] destino = vizinhoVazio(p);</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">			if (destino != null) {</span>
+<span class="fc" id="L200">				nascer(Tipo.B, destino);</span>
+<span class="fc" id="L201">				p.consumos = 0;</span>
+			}
+		}
+<span class="fc" id="L204">	}</span>
+
+	private int[] vizinhoVazio(Peixe p) {
+<span class="fc bfc" id="L207" title="All 2 branches covered.">		for (int[] d : DIRECOES) {</span>
+<span class="fc" id="L208">			int i = p.linha + d[0];</span>
+<span class="fc" id="L209">			int j = p.coluna + d[1];</span>
+<span class="fc bfc" id="L210" title="All 4 branches covered.">			if (dentro(i, j) &amp;&amp; grade[i][j] == null) {</span>
+<span class="fc" id="L211">				return new int[] { i, j };</span>
+			}
+		}
+<span class="fc" id="L214">		return null;</span>
+	}
+
+	private int[] vizinhoDoTipo(Peixe p, Tipo tipo) {
+<span class="fc bfc" id="L218" title="All 2 branches covered.">		for (int[] d : DIRECOES) {</span>
+<span class="fc" id="L219">			int i = p.linha + d[0];</span>
+<span class="fc" id="L220">			int j = p.coluna + d[1];</span>
+<span class="fc bfc" id="L221" title="All 6 branches covered.">			if (dentro(i, j) &amp;&amp; grade[i][j] != null &amp;&amp; grade[i][j].tipo == tipo) {</span>
+<span class="fc" id="L222">				return new int[] { i, j };</span>
+			}
+		}
+<span class="fc" id="L225">		return null;</span>
+	}
+
+	private boolean dentro(int i, int j) {
+<span class="fc bfc" id="L229" title="All 8 branches covered.">		return i &gt;= 0 &amp;&amp; i &lt; linhas &amp;&amp; j &gt;= 0 &amp;&amp; j &lt; colunas;</span>
+	}
+
+	private void mover(Peixe p, int[] destino) {
+<span class="fc" id="L233">		grade[p.linha][p.coluna] = null;</span>
+<span class="fc" id="L234">		p.linha = destino[0];</span>
+<span class="fc" id="L235">		p.coluna = destino[1];</span>
+<span class="fc" id="L236">		grade[p.linha][p.coluna] = p;</span>
+<span class="fc" id="L237">	}</span>
+
+	private void remover(Peixe p) {
+<span class="fc" id="L240">		p.vivo = false;</span>
+<span class="fc" id="L241">		grade[p.linha][p.coluna] = null;</span>
+<span class="fc" id="L242">	}</span>
+
+	private void nascer(Tipo tipo, int[] destino) {
+<span class="fc" id="L245">		grade[destino[0]][destino[1]] = new Peixe(tipo, destino[0], destino[1]);</span>
+<span class="fc" id="L246">	}</span>
+
+	/** Indica se ainda há peixe B; sem B o jogo termina (RF12). */
+	public boolean temPeixeB() {
+<span class="fc bfc" id="L250" title="All 2 branches covered.">		for (int i = 0; i &lt; linhas; i++) {</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">			for (int j = 0; j &lt; colunas; j++) {</span>
+<span class="fc bfc" id="L252" title="All 4 branches covered.">				if (grade[i][j] != null &amp;&amp; grade[i][j].tipo == Tipo.B) {</span>
+<span class="fc" id="L253">					return true;</span>
+				}
+			}
+		}
+<span class="fc" id="L257">		return false;</span>
+	}
+
+	/** Número de iterações concluídas (RF13). */
+	public int getPontuacao() {
+<span class="fc" id="L262">		return pontuacao;</span>
+	}
+
+	/** Matriz atual na notação da Parte I, por exemplo &quot;[A . .; . . B]&quot;. */
+	public String getMatriz() {
+<span class="fc" id="L267">		StringBuilder sb = new StringBuilder(&quot;[&quot;);</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">		for (int i = 0; i &lt; linhas; i++) {</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">			if (i &gt; 0) {</span>
+<span class="fc" id="L270">				sb.append(&quot;; &quot;);</span>
+			}
+<span class="fc bfc" id="L272" title="All 2 branches covered.">			for (int j = 0; j &lt; colunas; j++) {</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">				if (j &gt; 0) {</span>
+<span class="fc" id="L274">					sb.append(' ');</span>
+				}
+<span class="fc bfc" id="L276" title="All 2 branches covered.">				sb.append(grade[i][j] == null ? &quot;.&quot; : grade[i][j].tipo.name());</span>
+			}
+		}
+<span class="fc" id="L279">		return sb.append(']').toString();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
