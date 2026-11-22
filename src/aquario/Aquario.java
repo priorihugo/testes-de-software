@@ -1,6 +1,6 @@
 package aquario;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,24 +90,23 @@ public class Aquario {
 		return new Aquario(vm, vn, vra, vma, vrb, vmb, grade);
 	}
 
+	/** Aceita apenas inteiros positivos escritos só com dígitos (D02, D13). */
 	private static int inteiroPositivo(String nome, String valor) {
-		BigDecimal numero;
-		try {
-			numero = new BigDecimal(valor.trim());
-		} catch (NumberFormatException e) {
-			throw new EntradaInvalidaException(nome + "=" + valor + " não é um número");
+		String texto = valor.trim();
+		if (texto.matches("-?\\d+")) {
+			BigInteger numero = new BigInteger(texto);
+			if (numero.signum() <= 0) {
+				throw new EntradaInvalidaException(nome + "=" + valor + " não é positivo");
+			}
+			if (numero.bitLength() > 31) {
+				throw new EntradaInvalidaException(nome + "=" + valor + " é grande demais");
+			}
+			return numero.intValue();
 		}
-		if (numero.signum() != 0 && numero.stripTrailingZeros().scale() > 0) {
+		if (texto.matches("-?\\d*[.,]\\d+")) {
 			throw new EntradaInvalidaException(nome + "=" + valor + " não é inteiro");
 		}
-		if (numero.signum() <= 0) {
-			throw new EntradaInvalidaException(nome + "=" + valor + " não é positivo");
-		}
-		try {
-			return numero.intValueExact();
-		} catch (ArithmeticException e) {
-			throw new EntradaInvalidaException(nome + "=" + valor + " é grande demais");
-		}
+		throw new EntradaInvalidaException(nome + "=" + valor + " não é um inteiro escrito só com dígitos");
 	}
 
 	private static String[][] lerMatriz(String matriz) {

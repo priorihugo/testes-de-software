@@ -1,5 +1,5 @@
 aquario/Aquario.inicializar(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Laquario/Aquario;	(104/109)
-aquario/Aquario.inteiroPositivo(Ljava/lang/String;Ljava/lang/String;)I	(11/11)
+aquario/Aquario.inteiroPositivo(Ljava/lang/String;Ljava/lang/String;)I	(18/18)
 aquario/Aquario.lerMatriz(Ljava/lang/String;)[[Ljava/lang/String;	(24/25)
 aquario/Aquario.iterar()V	(57/59)
 aquario/Aquario.agirA(Laquario/Peixe;)V	(38/41)

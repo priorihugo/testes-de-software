@@ -1,6 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 Aquário - todos,aquario,Peixe,0,15,0,0,0,6,0,1,0,1
-Aquário - todos,aquario,Aquario,0,959,2,104,0,150,2,68,0,17
+Aquário - todos,aquario,Aquario,0,963,2,106,0,150,2,69,0,17
 Aquário - todos,aquario,Main,3,190,0,8,1,26,1,8,1,4
 Aquário - todos,aquario,EntradaInvalidaException,0,4,0,0,0,2,0,1,0,1
 Aquário - todos,aquario,Jogo,0,76,0,10,0,19,0,7,0,2

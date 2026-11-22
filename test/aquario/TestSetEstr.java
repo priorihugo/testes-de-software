@@ -105,7 +105,7 @@ public class TestSetEstr {
 	@Test
 	public void ce12MainMNaoNumerico() throws IOException {
 		String saida = executarMain("abc\n4\n1\n1\n2\n3\n3\n3\n", -1);
-		assertTrue(saida.contains("Inicialização recusada: M=abc não é um número"));
+		assertTrue(saida.contains("Inicialização recusada: M=abc"));
 	}
 
 	/** CE13: entrada termina durante a leitura dos parâmetros (Main.lerLinha, desvio linha == null). */
