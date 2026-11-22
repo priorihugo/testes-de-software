@@ -38,6 +38,7 @@ Cada ciclo registra o que foi escrito primeiro (teste), o resultado da execuçã
 | Ciclo | Data | Testes escritos | Resultado dos testes novos | Mudança no código | Resultado final |
 |---|---|---|---|---|---|
 | 0 | 22/11/2026 19:53 | CE01–CE14: parâmetro não numérico e grande demais, colchetes na matriz, linha vazia, primeira linha com tamanho errado, matriz sem A, símbolo inválido em (1,1), fim da entrada na escolha, quatro caminhos do `Main` | 14 passaram de primeira; nenhum defeito | nenhuma | 82/82 passam; JaCoCo 99,4% instruções, 97,6% desvios; BA-DUA 97,7% |
+| 1 | 22/11/2026 19:56 | CE15: matriz de duas linhas lida pelo `Main` (único desvio alcançável ainda não coberto); CE16: símbolo inválido na célula (2,1) (par definição-uso de `i` incrementado) | 2 passaram de primeira; nenhum defeito | nenhuma | 84/84 passam; JaCoCo 99,8% instruções, 98,4% desvios; BA-DUA 98,9% |
 
 No ciclo 0, também o comentário do CT20 em `TestSetFunc.java` foi alinhado à revisão 1.1 da Parte I (V32 e V36 inalcançáveis); nenhuma entrada ou saída esperada mudou.
 

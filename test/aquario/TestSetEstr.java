@@ -132,4 +132,18 @@ public class TestSetEstr {
 		assertTrue(bytes.toString("UTF-8").contains("Iteração 1: [B .]"));
 		assertTrue(bytes.toString("UTF-8").contains("Pontuação final: 1"));
 	}
+
+	/** CE15: matriz de duas linhas lida pelo console (Main.executar, desvio i > 0 verdadeiro; du de i e matriz). */
+	@Test
+	public void ce15MainMatrizComDuasLinhas() throws IOException {
+		String saida = executarMain("2\n2\n1\n1\n9\n9\n9\n9\nB .\n. A\nE\n", 1);
+		assertTrue(saida.contains("Matriz inicial: [B .; . A]"));
+		assertTrue(saida.contains("Iteração 1: [. A; B .]"));
+	}
+
+	/** CE16: símbolo inválido na célula (2,1) (Aquario.inicializar, du de i incrementado até a mensagem de erro). */
+	@Test(expected = EntradaInvalidaException.class)
+	public void ce16SimboloInvalidoNaSegundaLinha() {
+		Aquario.inicializar("2", "2", "1", "1", "2", "3", "3", "3", "A B; ? .");
+	}
 }
