@@ -166,116 +166,115 @@ public class Aquario {
 <span class="fc" id="L166">			return;</span>
 		}
 <span class="fc bfc" id="L168" title="All 2 branches covered.">		if (p.movimentos &gt;= ra) {</span>
-<span class="fc" id="L169">			int[] destino = vizinhoVazio(p);</span>
-<span class="pc bpc" id="L170" title="1 of 2 branches missed.">			if (destino != null) {</span>
-<span class="fc" id="L171">				nascer(Tipo.A, destino);</span>
-<span class="fc" id="L172">				p.movimentos = 0;</span>
-			}
+			// Atingir RA exige ter se movido nesta ação, o que deixou a origem livre:
+			// sempre há célula para o filho (restrição R(C3, C4), seção 6.5 da Parte I).
+<span class="fc" id="L171">			nascer(Tipo.A, vizinhoVazio(p));</span>
+<span class="fc" id="L172">			p.movimentos = 0;</span>
 		}
-<span class="fc" id="L175">	}</span>
+<span class="fc" id="L174">	}</span>
 
 	/** Alimentação, movimento, morte e reprodução de B (D07, D08, D09, D10). */
 	private void agirB(Peixe p) {
-<span class="fc" id="L179">		int[] presa = vizinhoDoTipo(p, Tipo.A);</span>
-<span class="fc bfc" id="L180" title="All 2 branches covered.">		if (presa != null) {</span>
-<span class="fc" id="L181">			grade[presa[0]][presa[1]].vivo = false;</span>
-<span class="fc" id="L182">			mover(p, presa);</span>
-<span class="fc" id="L183">			p.consumos++;</span>
-<span class="fc" id="L184">			p.fome = 0;</span>
+<span class="fc" id="L178">		int[] presa = vizinhoDoTipo(p, Tipo.A);</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">		if (presa != null) {</span>
+<span class="fc" id="L180">			grade[presa[0]][presa[1]].vivo = false;</span>
+<span class="fc" id="L181">			mover(p, presa);</span>
+<span class="fc" id="L182">			p.consumos++;</span>
+<span class="fc" id="L183">			p.fome = 0;</span>
 		} else {
-<span class="fc" id="L186">			int[] livre = vizinhoVazio(p);</span>
-<span class="fc bfc" id="L187" title="All 2 branches covered.">			if (livre != null) {</span>
-<span class="fc" id="L188">				mover(p, livre);</span>
+<span class="fc" id="L185">			int[] livre = vizinhoVazio(p);</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">			if (livre != null) {</span>
+<span class="fc" id="L187">				mover(p, livre);</span>
 			}
-<span class="fc" id="L190">			p.fome++;</span>
+<span class="fc" id="L189">			p.fome++;</span>
 		}
-<span class="fc bfc" id="L192" title="All 2 branches covered.">		if (p.fome &gt;= mb) {</span>
-<span class="fc" id="L193">			remover(p);</span>
-<span class="fc" id="L194">			return;</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">		if (p.fome &gt;= mb) {</span>
+<span class="fc" id="L192">			remover(p);</span>
+<span class="fc" id="L193">			return;</span>
 		}
-<span class="fc bfc" id="L196" title="All 4 branches covered.">		if (p.consumos &gt;= rb &amp;&amp; vizinhoDoTipo(p, Tipo.B) == null) {</span>
-<span class="fc" id="L197">			int[] destino = vizinhoVazio(p);</span>
-<span class="pc bpc" id="L198" title="1 of 2 branches missed.">			if (destino != null) {</span>
-<span class="fc" id="L199">				nascer(Tipo.B, destino);</span>
-<span class="fc" id="L200">				p.consumos = 0;</span>
-			}
+<span class="fc bfc" id="L195" title="All 4 branches covered.">		if (p.consumos &gt;= rb &amp;&amp; vizinhoDoTipo(p, Tipo.B) == null) {</span>
+			// Sem outro B vizinho há sempre célula livre: B que comeu ou se moveu deixou
+			// a origem livre, e B que ficou parado está cercado por outros B
+			// (restrição I(C9, C10), seção 6.5 da Parte I).
+<span class="fc" id="L199">			nascer(Tipo.B, vizinhoVazio(p));</span>
+<span class="fc" id="L200">			p.consumos = 0;</span>
 		}
-<span class="fc" id="L203">	}</span>
+<span class="fc" id="L202">	}</span>
 
 	private int[] vizinhoVazio(Peixe p) {
-<span class="fc bfc" id="L206" title="All 2 branches covered.">		for (int[] d : DIRECOES) {</span>
-<span class="fc" id="L207">			int i = p.linha + d[0];</span>
-<span class="fc" id="L208">			int j = p.coluna + d[1];</span>
-<span class="fc bfc" id="L209" title="All 4 branches covered.">			if (dentro(i, j) &amp;&amp; grade[i][j] == null) {</span>
-<span class="fc" id="L210">				return new int[] { i, j };</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">		for (int[] d : DIRECOES) {</span>
+<span class="fc" id="L206">			int i = p.linha + d[0];</span>
+<span class="fc" id="L207">			int j = p.coluna + d[1];</span>
+<span class="fc bfc" id="L208" title="All 4 branches covered.">			if (dentro(i, j) &amp;&amp; grade[i][j] == null) {</span>
+<span class="fc" id="L209">				return new int[] { i, j };</span>
 			}
 		}
-<span class="fc" id="L213">		return null;</span>
+<span class="fc" id="L212">		return null;</span>
 	}
 
 	private int[] vizinhoDoTipo(Peixe p, Tipo tipo) {
-<span class="fc bfc" id="L217" title="All 2 branches covered.">		for (int[] d : DIRECOES) {</span>
-<span class="fc" id="L218">			int i = p.linha + d[0];</span>
-<span class="fc" id="L219">			int j = p.coluna + d[1];</span>
-<span class="fc bfc" id="L220" title="All 6 branches covered.">			if (dentro(i, j) &amp;&amp; grade[i][j] != null &amp;&amp; grade[i][j].tipo == tipo) {</span>
-<span class="fc" id="L221">				return new int[] { i, j };</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">		for (int[] d : DIRECOES) {</span>
+<span class="fc" id="L217">			int i = p.linha + d[0];</span>
+<span class="fc" id="L218">			int j = p.coluna + d[1];</span>
+<span class="fc bfc" id="L219" title="All 6 branches covered.">			if (dentro(i, j) &amp;&amp; grade[i][j] != null &amp;&amp; grade[i][j].tipo == tipo) {</span>
+<span class="fc" id="L220">				return new int[] { i, j };</span>
 			}
 		}
-<span class="fc" id="L224">		return null;</span>
+<span class="fc" id="L223">		return null;</span>
 	}
 
 	private boolean dentro(int i, int j) {
-<span class="fc bfc" id="L228" title="All 8 branches covered.">		return i &gt;= 0 &amp;&amp; i &lt; linhas &amp;&amp; j &gt;= 0 &amp;&amp; j &lt; colunas;</span>
+<span class="fc bfc" id="L227" title="All 8 branches covered.">		return i &gt;= 0 &amp;&amp; i &lt; linhas &amp;&amp; j &gt;= 0 &amp;&amp; j &lt; colunas;</span>
 	}
 
 	private void mover(Peixe p, int[] destino) {
-<span class="fc" id="L232">		grade[p.linha][p.coluna] = null;</span>
-<span class="fc" id="L233">		p.linha = destino[0];</span>
-<span class="fc" id="L234">		p.coluna = destino[1];</span>
-<span class="fc" id="L235">		grade[p.linha][p.coluna] = p;</span>
-<span class="fc" id="L236">	}</span>
+<span class="fc" id="L231">		grade[p.linha][p.coluna] = null;</span>
+<span class="fc" id="L232">		p.linha = destino[0];</span>
+<span class="fc" id="L233">		p.coluna = destino[1];</span>
+<span class="fc" id="L234">		grade[p.linha][p.coluna] = p;</span>
+<span class="fc" id="L235">	}</span>
 
 	private void remover(Peixe p) {
-<span class="fc" id="L239">		p.vivo = false;</span>
-<span class="fc" id="L240">		grade[p.linha][p.coluna] = null;</span>
-<span class="fc" id="L241">	}</span>
+<span class="fc" id="L238">		p.vivo = false;</span>
+<span class="fc" id="L239">		grade[p.linha][p.coluna] = null;</span>
+<span class="fc" id="L240">	}</span>
 
 	private void nascer(Tipo tipo, int[] destino) {
-<span class="fc" id="L244">		grade[destino[0]][destino[1]] = new Peixe(tipo, destino[0], destino[1]);</span>
-<span class="fc" id="L245">	}</span>
+<span class="fc" id="L243">		grade[destino[0]][destino[1]] = new Peixe(tipo, destino[0], destino[1]);</span>
+<span class="fc" id="L244">	}</span>
 
 	/** Indica se ainda há peixe B; sem B o jogo termina (RF12). */
 	public boolean temPeixeB() {
-<span class="fc bfc" id="L249" title="All 2 branches covered.">		for (int i = 0; i &lt; linhas; i++) {</span>
-<span class="fc bfc" id="L250" title="All 2 branches covered.">			for (int j = 0; j &lt; colunas; j++) {</span>
-<span class="fc bfc" id="L251" title="All 4 branches covered.">				if (grade[i][j] != null &amp;&amp; grade[i][j].tipo == Tipo.B) {</span>
-<span class="fc" id="L252">					return true;</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">		for (int i = 0; i &lt; linhas; i++) {</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">			for (int j = 0; j &lt; colunas; j++) {</span>
+<span class="fc bfc" id="L250" title="All 4 branches covered.">				if (grade[i][j] != null &amp;&amp; grade[i][j].tipo == Tipo.B) {</span>
+<span class="fc" id="L251">					return true;</span>
 				}
 			}
 		}
-<span class="fc" id="L256">		return false;</span>
+<span class="fc" id="L255">		return false;</span>
 	}
 
 	/** Número de iterações concluídas (RF13). */
 	public int getPontuacao() {
-<span class="fc" id="L261">		return pontuacao;</span>
+<span class="fc" id="L260">		return pontuacao;</span>
 	}
 
 	/** Matriz atual na notação da Parte I, por exemplo &quot;[A . .; . . B]&quot;. */
 	public String getMatriz() {
-<span class="fc" id="L266">		StringBuilder sb = new StringBuilder(&quot;[&quot;);</span>
-<span class="fc bfc" id="L267" title="All 2 branches covered.">		for (int i = 0; i &lt; linhas; i++) {</span>
-<span class="fc bfc" id="L268" title="All 2 branches covered.">			if (i &gt; 0) {</span>
-<span class="fc" id="L269">				sb.append(&quot;; &quot;);</span>
+<span class="fc" id="L265">		StringBuilder sb = new StringBuilder(&quot;[&quot;);</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">		for (int i = 0; i &lt; linhas; i++) {</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">			if (i &gt; 0) {</span>
+<span class="fc" id="L268">				sb.append(&quot;; &quot;);</span>
 			}
-<span class="fc bfc" id="L271" title="All 2 branches covered.">			for (int j = 0; j &lt; colunas; j++) {</span>
-<span class="fc bfc" id="L272" title="All 2 branches covered.">				if (j &gt; 0) {</span>
-<span class="fc" id="L273">					sb.append(' ');</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">			for (int j = 0; j &lt; colunas; j++) {</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">				if (j &gt; 0) {</span>
+<span class="fc" id="L272">					sb.append(' ');</span>
 				}
-<span class="fc bfc" id="L275" title="All 2 branches covered.">				sb.append(grade[i][j] == null ? &quot;.&quot; : grade[i][j].tipo.name());</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">				sb.append(grade[i][j] == null ? &quot;.&quot; : grade[i][j].tipo.name());</span>
 			}
 		}
-<span class="fc" id="L278">		return sb.append(']').toString();</span>
+<span class="fc" id="L277">		return sb.append(']').toString();</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

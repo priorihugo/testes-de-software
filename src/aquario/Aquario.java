@@ -166,11 +166,10 @@ public class Aquario {
 			return;
 		}
 		if (p.movimentos >= ra) {
-			int[] destino = vizinhoVazio(p);
-			if (destino != null) {
-				nascer(Tipo.A, destino);
-				p.movimentos = 0;
-			}
+			// Atingir RA exige ter se movido nesta ação, o que deixou a origem livre:
+			// sempre há célula para o filho (restrição R(C3, C4), seção 6.5 da Parte I).
+			nascer(Tipo.A, vizinhoVazio(p));
+			p.movimentos = 0;
 		}
 	}
 
@@ -194,11 +193,11 @@ public class Aquario {
 			return;
 		}
 		if (p.consumos >= rb && vizinhoDoTipo(p, Tipo.B) == null) {
-			int[] destino = vizinhoVazio(p);
-			if (destino != null) {
-				nascer(Tipo.B, destino);
-				p.consumos = 0;
-			}
+			// Sem outro B vizinho há sempre célula livre: B que comeu ou se moveu deixou
+			// a origem livre, e B que ficou parado está cercado por outros B
+			// (restrição I(C9, C10), seção 6.5 da Parte I).
+			nascer(Tipo.B, vizinhoVazio(p));
+			p.consumos = 0;
 		}
 	}
 
