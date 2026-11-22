@@ -39,6 +39,7 @@ Cada ciclo registra o que foi escrito primeiro (teste), o resultado da execuçã
 |---|---|---|---|---|---|
 | 0 | 22/11/2026 19:53 | CE01–CE14: parâmetro não numérico e grande demais, colchetes na matriz, linha vazia, primeira linha com tamanho errado, matriz sem A, símbolo inválido em (1,1), fim da entrada na escolha, quatro caminhos do `Main` | 14 passaram de primeira; nenhum defeito | nenhuma | 82/82 passam; JaCoCo 99,4% instruções, 97,6% desvios; BA-DUA 97,7% |
 | 1 | 22/11/2026 19:56 | CE15: matriz de duas linhas lida pelo `Main` (único desvio alcançável ainda não coberto); CE16: símbolo inválido na célula (2,1) (par definição-uso de `i` incrementado) | 2 passaram de primeira; nenhum defeito | nenhuma | 84/84 passam; JaCoCo 99,8% instruções, 98,4% desvios; BA-DUA 98,9% |
+| 2a | 22/11/2026 19:58 | CE17–CE19: "2.0", "1e1" e "+3" devem ser recusados (nova decisão D13: parâmetro aceito só se escrito apenas com dígitos) | **3 falharam** (vermelho): o código aceitava os três, convertendo para 2, 10 e 3 | — (commit só dos testes) | 84/87 passam |
 
 No ciclo 0, também o comentário do CT20 em `TestSetFunc.java` foi alinhado à revisão 1.1 da Parte I (V32 e V36 inalcançáveis); nenhuma entrada ou saída esperada mudou.
 

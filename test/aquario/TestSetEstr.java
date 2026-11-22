@@ -146,4 +146,22 @@ public class TestSetEstr {
 	public void ce16SimboloInvalidoNaSegundaLinha() {
 		Aquario.inicializar("2", "2", "1", "1", "2", "3", "3", "3", "A B; ? .");
 	}
+
+	/** CE17: inteiro escrito com casa decimal é recusado (decisão D13, revisão 1.2 da Parte I). */
+	@Test(expected = EntradaInvalidaException.class)
+	public void ce17ParametroComCasaDecimalZero() {
+		Aquario.inicializar("1", "4", "1", "1", "2.0", "3", "3", "3", "A . . B");
+	}
+
+	/** CE18: notação científica é recusada (decisão D13, revisão 1.2 da Parte I). */
+	@Test(expected = EntradaInvalidaException.class)
+	public void ce18ParametroEmNotacaoCientifica() {
+		Aquario.inicializar("1", "4", "1", "1", "2", "1e1", "3", "3", "A . . B");
+	}
+
+	/** CE19: sinal de mais é recusado (decisão D13, revisão 1.2 da Parte I). */
+	@Test(expected = EntradaInvalidaException.class)
+	public void ce19ParametroComSinalDeMais() {
+		Aquario.inicializar("1", "4", "1", "1", "2", "3", "+3", "3", "A . . B");
+	}
 }
