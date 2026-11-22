@@ -53,6 +53,7 @@ awk -F, 'NR > 1 { im += $4; ic += $5; bm += $6; bc += $7; lm += $8; lc += $9; mm
 		printf "JaCoCo  instruções %d/%d (%.1f%%)  desvios %d/%d (%.1f%%)  linhas %d/%d (%.1f%%)  métodos %d/%d\n",
 			ic, ic + im, 100 * ic / (ic + im), bc, bc + bm, 100 * bc / (bc + bm), lc, lc + lm, 100 * lc / (lc + lm), mc, mc + mm
 	}' "$SAIDA/jacoco.csv"
-cobertos=$(grep -o 'covered="1"' "$SAIDA/badua.xml" | wc -l)
-total=$(grep -o '<du ' "$SAIDA/badua.xml" | wc -l)
-awk -v c="$cobertos" -v t="$total" 'BEGIN { printf "BA-DUA  pares definição-uso %d/%d (%.1f%%)\n", c, t, 100 * c / t }'
+# Soma o relatório de texto por método, que é a contagem oficial do BA-DUA. O XML
+# agrupa pares que caem na mesma linha e por isso lista menos pares.
+awk -F'\t' '{ split($2, a, /[()\/]/); c += a[2]; t += a[3] }
+	END { printf "BA-DUA  pares definição-uso %d/%d (%.1f%%)\n", c, t, 100 * c / t }' "$SAIDA/badua.txt"

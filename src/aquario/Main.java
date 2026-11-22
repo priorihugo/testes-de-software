@@ -10,6 +10,9 @@ public class Main {
 
 	private static final String[] PARAMETROS = { "M", "N", "X", "Y", "RA", "MA", "RB", "MB" };
 
+	private Main() {
+	}
+
 	public static void main(String[] args) throws IOException {
 		executar(new BufferedReader(new InputStreamReader(System.in, "UTF-8")), System.out);
 	}
