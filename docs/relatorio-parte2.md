@@ -87,15 +87,22 @@ A coluna Saída Obtida da Tabela 2 da Parte I foi preenchida com esse resultado 
 
 ### 3.3 Cobertura do TestSet-Func
 
+Cobertura do TestSet-Func sobre a versão final do código (a mesma usada nos prints do Eclipse):
+
 | Ferramenta | Critério | Coberto | Total | % |
 |---|---|---|---|---|
-| JaCoCo (EclEmma) | Instruções | 1027 | 1271 | 80,8 |
-| JaCoCo (EclEmma) | Desvios | 109 | 124 | 87,9 |
-| JaCoCo (EclEmma) | Linhas | 173 | 206 | 84,0 |
-| BA-DUA (Baduíno) | Pares definição-uso | 469 | 548 | 85,6 |
+| JaCoCo (EclEmma) | Instruções | 1025 | 1264 | 81,1 |
+| JaCoCo (EclEmma) | Desvios | 107 | 122 | 87,7 |
+| JaCoCo (EclEmma) | Linhas | 171 | 201 | 85,1 |
+| JaCoCo (EclEmma) | Métodos | 22 | 26 | 84,6 |
+| BA-DUA (Baduíno) | Pares definição-uso | 464 | 547 | 84,8 |
+
+Na primeira execução, sobre o código do commit `8409274`, os valores foram 80,8% das instruções, 87,9% dos desvios e 85,6% dos pares. A pequena diferença vem das mudanças dos ciclos 2 a 4, na validação de parâmetros e na remoção de verificações impossíveis.
 
 **[PRINT DO ECLIPSE: view Coverage do EclEmma com TestSetFunc]**
 **[PRINT DO ECLIPSE: view do Baduíno com TestSetFunc]**
+
+Prévias geradas pela linha de comando, apenas para referência, em `docs/previas/`: `junit-func.png`, `jacoco-func.png`, `jacoco-func-Main.png` e `badua-func.png`.
 
 O principal trecho não coberto é a classe `Main`, com 0%: nenhum caso funcional passa pela leitura do console, porque a Parte I especifica os casos a partir dos parâmetros e da matriz, não da digitação. Os demais trechos não cobertos são variações da leitura da matriz (colchetes, linha vazia) e alguns pares definição-uso de laços.
 
@@ -469,11 +476,11 @@ Cada ciclo registra o que foi escrito primeiro (teste), o resultado da execuçã
 
 | Ferramenta | Critério | TestSet-Func | TestSet-Func + TestSet-Estr |
 |---|---|---|---|
-| JaCoCo (EclEmma) | Instruções | 80,8% | **100%** (1264/1264) |
-| JaCoCo (EclEmma) | Desvios | 87,9% | **100%** (122/122) |
-| JaCoCo (EclEmma) | Linhas | 84,0% | **100%** (201/201) |
-| JaCoCo (EclEmma) | Métodos | 22/27 | **100%** (26/26) |
-| BA-DUA (Baduíno) | Pares definição-uso | 85,6% | **95,6%** (523/547) |
+| JaCoCo (EclEmma) | Instruções | 81,1% | **100%** (1264/1264) |
+| JaCoCo (EclEmma) | Desvios | 87,7% | **100%** (122/122) |
+| JaCoCo (EclEmma) | Linhas | 85,1% | **100%** (201/201) |
+| JaCoCo (EclEmma) | Métodos | 22/26 | **100%** (26/26) |
+| BA-DUA (Baduíno) | Pares definição-uso | 84,8% | **95,6%** (523/547) |
 
 ![Relatório do JaCoCo, TestSet-Func + TestSet-Estr](figuras/jacoco-todos.png)
 
@@ -505,7 +512,7 @@ Descontados os inalcançáveis, a cobertura dos pares alcançáveis é de 100% (
 
 **[A PREENCHER PELO GRUPO]** — a especificação pede a análise do grupo. Fatos registrados neste trabalho que podem apoiar a análise:
 
-- O teste funcional (68 casos) não revelou defeitos e cobriu 80,8% das instruções e 85,6% dos pares definição-uso.
+- O teste funcional (68 casos) não revelou defeitos e cobriu 81,1% das instruções e 84,8% dos pares definição-uso na versão final do código.
 - O que o teste funcional não alcançou foi principalmente a interface de console e variações de formato da entrada, que a especificação da Parte I não detalha.
 - O teste estrutural acrescentou 19 casos e levou o fluxo de controle a 100%. Revelou um defeito de validação (ciclo 2) e um teste mal especificado (CE12).
 - A análise manual de fluxo de dados identificou os mesmos pares inalcançáveis que o BA-DUA apontou, e as restrições da Parte I explicam vários deles.

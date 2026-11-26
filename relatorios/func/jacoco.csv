@@ -1,7 +1,7 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 Aquário - func,aquario,Peixe,0,15,0,0,0,6,0,1,0,1
-Aquário - func,aquario,Aquario,49,910,6,100,5,145,5,65,0,17
-Aquário - func,aquario,Main,193,0,8,0,27,0,9,0,5,0
+Aquário - func,aquario,Aquario,47,908,6,98,3,143,5,64,0,17
+Aquário - func,aquario,Main,190,0,8,0,26,0,8,0,4,0
 Aquário - func,aquario,EntradaInvalidaException,0,4,0,0,0,2,0,1,0,1
 Aquário - func,aquario,Jogo,2,74,1,9,1,18,1,6,0,2
 Aquário - func,aquario,Tipo,0,24,0,0,0,2,0,1,0,1
