@@ -102,6 +102,18 @@ Na primeira execução, sobre o código do commit `8409274`, os valores foram 80
 **[PRINT DO ECLIPSE: view Coverage do EclEmma com TestSetFunc]**
 **[PRINT DO ECLIPSE: view do Baduíno com TestSetFunc]**
 
+**Cobertura por classe — TestSet-Func**
+
+**[PRINT DO ECLIPSE: código de Aquario.java colorido pelo EclEmma, só TestSetFunc]**
+**[PRINT DO ECLIPSE: código de Jogo.java colorido pelo EclEmma, só TestSetFunc]**
+**[PRINT DO ECLIPSE: código de Main.java colorido pelo EclEmma, só TestSetFunc]**
+**[PRINT DO ECLIPSE: código de Peixe.java colorido pelo EclEmma, só TestSetFunc]**
+**[PRINT DO ECLIPSE: código de Tipo.java colorido pelo EclEmma, só TestSetFunc]**
+**[PRINT DO ECLIPSE: código de EntradaInvalidaException.java colorido pelo EclEmma, só TestSetFunc]**
+**[PRINT DO ECLIPSE: view do Baduíno com os métodos de Aquario expandidos, só TestSetFunc]**
+**[PRINT DO ECLIPSE: view do Baduíno com os métodos de Jogo expandidos, só TestSetFunc]**
+**[PRINT DO ECLIPSE: view do Baduíno com os métodos de Main expandidos, só TestSetFunc]**
+
 Prévias geradas pela linha de comando, apenas para referência, em `docs/previas/`: `junit-func.png`, `jacoco-func.png`, `jacoco-func-Main.png` e `badua-func.png`.
 
 O principal trecho não coberto é a classe `Main`, com 0%: nenhum caso funcional passa pela leitura do console, porque a Parte I especifica os casos a partir dos parâmetros e da matriz, não da digitação. Os demais trechos não cobertos são variações da leitura da matriz (colchetes, linha vazia) e alguns pares definição-uso de laços.
@@ -147,6 +159,58 @@ private static int inteiroPositivo(String nome, String valor) {       // nó 0
 
 V(G) = 14 − 11 + 2 = **5** = 4 decisões + 1.
 
+**Nós do grafo**
+
+- Nó 0: entrada (parâmetros `nome` e `valor`)
+- Nó 1: `texto = valor.trim()`; decisão: `texto` tem só dígitos?
+- Nó 2: `numero = new BigInteger(texto)`; decisão: `numero <= 0`?
+- Nó 3: lança "não é positivo"
+- Nó 4: decisão: `numero` tem mais de 31 bits?
+- Nó 5: lança "é grande demais"
+- Nó 6: retorna o valor
+- Nó 7: decisão: `texto` é número decimal?
+- Nó 8: lança "não é inteiro"
+- Nó 9: lança "não é um inteiro escrito só com dígitos"
+- Nó 10: saída
+
+**Critério Todos-os-Nós**
+
+| Nó | Caminho | Caso |
+|---|---|---|
+| 0 | C1 | CT36 |
+| 1 | C1 | CT36 |
+| 2 | C1 | CT36 |
+| 3 | C1 | CT36 |
+| 4 | C2 | CE02 |
+| 5 | C2 | CE02 |
+| 6 | C3 | CT01 |
+| 7 | C4 | CT37 |
+| 8 | C4 | CT37 |
+| 9 | C5 | CE01 |
+| 10 | C1 | CT36 |
+
+**Critério Todos-os-Arcos**
+
+| Arco | Caminho | Caso |
+|---|---|---|
+| 0→1 | C1 | CT36 |
+| 1→2 | C1 | CT36 |
+| 1→7 | C4 | CT37 |
+| 2→3 | C1 | CT36 |
+| 2→4 | C2 | CE02 |
+| 4→5 | C2 | CE02 |
+| 4→6 | C3 | CT01 |
+| 7→8 | C4 | CT37 |
+| 7→9 | C5 | CE01 |
+| 3→10 | C1 | CT36 |
+| 5→10 | C2 | CE02 |
+| 6→10 | C3 | CT01 |
+| 8→10 | C4 | CT37 |
+| 9→10 | C5 | CE01 |
+
+
+**Critério Caminhos independentes**
+
 | Caminho | Nós | Situação | Caso |
 |---|---|---|---|
 | C1 | 0-1-2-3-10 | inteiro não positivo | CT36 (X=0) |
@@ -184,6 +248,51 @@ private void agirA(Peixe p) {                   // nó 0
 *Figura 3 — GFC de `Aquario.agirA`.*
 
 V(G) = 11 − 9 + 2 = **4** = 3 decisões + 1.
+
+**Nós do grafo**
+
+- Nó 0: entrada (parâmetro `p`)
+- Nó 1: `livre = vizinhoVazio(p)`; decisão: `livre != null`?
+- Nó 2: move `p`, incrementa `movimentos`, zera `fome`
+- Nó 3: zera `movimentos`, incrementa `fome`
+- Nó 4: decisão: `fome >= ma`?
+- Nó 5: remove `p` (morte) e retorna
+- Nó 6: decisão: `movimentos >= ra`?
+- Nó 7: nasce o filho e zera `movimentos`
+- Nó 8: saída
+
+**Critério Todos-os-Nós**
+
+| Nó | Caminho | Caso |
+|---|---|---|
+| 0 | C1 | CT01 |
+| 1 | C1 | CT01 |
+| 2 | C1 | CT01 |
+| 3 | C3 | CT20 |
+| 4 | C1 | CT01 |
+| 5 | C4 | CT07 |
+| 6 | C1 | CT01 |
+| 7 | C2 | CT02 |
+| 8 | C1 | CT01 |
+
+**Critério Todos-os-Arcos**
+
+| Arco | Caminho | Caso |
+|---|---|---|
+| 0→1 | C1 | CT01 |
+| 1→2 | C1 | CT01 |
+| 1→3 | C3 | CT20 |
+| 2→4 | C1 | CT01 |
+| 3→4 | C3 | CT20 |
+| 4→5 | C4 | CT07 |
+| 4→6 | C1 | CT01 |
+| 6→7 | C2 | CT02 |
+| 6→8 | C1 | CT01 |
+| 7→8 | C2 | CT02 |
+| 5→8 | C4 | CT07 |
+
+
+**Critério Caminhos independentes**
 
 | Caminho | Nós | Situação | Caso |
 |---|---|---|---|
@@ -229,6 +338,62 @@ private void agirB(Peixe p) {                                     // nó 0
 
 V(G) = 16 − 12 + 2 = **6** = 5 decisões + 1.
 
+**Nós do grafo**
+
+- Nó 0: entrada (parâmetro `p`)
+- Nó 1: `presa = vizinhoDoTipo(p, A)`; decisão: `presa != null`?
+- Nó 2: consome o A, move `p`, incrementa `consumos`, zera `fome`
+- Nó 3: `livre = vizinhoVazio(p)`; decisão: `livre != null`?
+- Nó 4: move `p` para a célula livre
+- Nó 5: incrementa `fome`
+- Nó 6: decisão: `fome >= mb`?
+- Nó 7: remove `p` (morte) e retorna
+- Nó 8: decisão: `consumos >= rb`?
+- Nó 9: decisão: não há B vizinho?
+- Nó 10: nasce o filho e zera `consumos`
+- Nó 11: saída
+
+**Critério Todos-os-Nós**
+
+| Nó | Caminho | Caso |
+|---|---|---|
+| 0 | C1 | CT12 |
+| 1 | C1 | CT12 |
+| 2 | C1 | CT12 |
+| 3 | C4 | CT01 |
+| 4 | C4 | CT01 |
+| 5 | C4 | CT01 |
+| 6 | C1 | CT12 |
+| 7 | C6 | CT16 |
+| 8 | C1 | CT12 |
+| 9 | C2 | CT14 |
+| 10 | C2 | CT14 |
+| 11 | C1 | CT12 |
+
+**Critério Todos-os-Arcos**
+
+| Arco | Caminho | Caso |
+|---|---|---|
+| 0→1 | C1 | CT12 |
+| 1→2 | C1 | CT12 |
+| 1→3 | C4 | CT01 |
+| 3→4 | C4 | CT01 |
+| 3→5 | C5 | CT20 |
+| 4→5 | C4 | CT01 |
+| 2→6 | C1 | CT12 |
+| 5→6 | C4 | CT01 |
+| 6→7 | C6 | CT16 |
+| 6→8 | C1 | CT12 |
+| 8→9 | C2 | CT14 |
+| 8→11 | C1 | CT12 |
+| 9→10 | C2 | CT14 |
+| 9→11 | C3 | CT15 |
+| 10→11 | C2 | CT14 |
+| 7→11 | C6 | CT16 |
+
+
+**Critério Caminhos independentes**
+
 | Caminho | Nós | Situação | Caso |
 |---|---|---|---|
 | C1 | 0-1-2-6-8-11 | come, ainda abaixo de RB | CT12 (RB=2) |
@@ -272,7 +437,76 @@ public void iterar() {                                    // nó 0
 
 V(G) = 21 − 16 + 2 = **7** = 6 decisões + 1.
 
+**Nós do grafo**
+
+- Nó 0: entrada
+- Nó 1: cria a lista `ordem`; `i = 0`
+- Nó 2: decisão: `i < linhas`?
+- Nó 3: `j = 0`
+- Nó 4: decisão: `j < colunas`?
+- Nó 5: decisão: célula ocupada?
+- Nó 6: adiciona o peixe à lista
+- Nó 7: `j++`
+- Nó 8: `i++`
+- Nó 9: decisão: há próximo peixe na lista?
+- Nó 10: decisão: peixe já morto ou consumido?
+- Nó 11: decisão: peixe é do tipo A?
+- Nó 12: `agirA(p)`
+- Nó 13: `agirB(p)`
+- Nó 14: `pontuacao++`
+- Nó 15: saída
+
+**Critério Todos-os-Nós**
+
+| Nó | Caso |
+|---|---|
+| 0 | CT01 |
+| 1 | CT01 |
+| 2 | CT01 |
+| 3 | CT01 |
+| 4 | CT01 |
+| 5 | CT01 |
+| 6 | CT01 |
+| 7 | CT01 |
+| 8 | CT01 |
+| 9 | CT01 |
+| 10 | CT01 |
+| 11 | CT01 |
+| 12 | CT01 |
+| 13 | CT01 |
+| 14 | CT01 |
+| 15 | CT01 |
+
+**Critério Todos-os-Arcos**
+
+| Arco | Caso |
+|---|---|
+| 0→1 | CT01 |
+| 1→2 | CT01 |
+| 2→3 | CT01 |
+| 2→9 | CT01 |
+| 3→4 | CT01 |
+| 4→5 | CT01 |
+| 4→8 | CT01 |
+| 5→6 | CT01 |
+| 5→7 | CT01 |
+| 6→7 | CT01 |
+| 7→4 | CT01 |
+| 8→2 | CT01 |
+| 9→10 | CT01 |
+| 9→14 | CT01 |
+| 10→9 | CT12 |
+| 10→11 | CT01 |
+| 11→12 | CT01 |
+| 11→13 | CT01 |
+| 12→9 | CT01 |
+| 13→9 | CT01 |
+| 14→15 | CT01 |
+
+
 Em métodos com laços, os caminhos independentes se distinguem pelos arcos que percorrem dentro de cada volta. Todos os arcos são exercitados:
+
+**Arcos agrupados por situação**
 
 | Arcos | Situação | Caso |
 |---|---|---|
@@ -312,6 +546,47 @@ public static int executar(Aquario aquario, BufferedReader entrada, PrintStream 
 
 V(G) = 9 − 8 + 2 = **3** = 2 decisões + 1.
 
+**Nós do grafo**
+
+- Nó 0: entrada
+- Nó 1: `aquario.iterar()` e mostra a matriz
+- Nó 2: decisão: não há B?
+- Nó 3: mostra "Fim de jogo" e sai do laço
+- Nó 4: decisão: opção lida é E?
+- Nó 5: mostra "Jogo encerrado pelo jogador" e sai do laço
+- Nó 6: mostra a pontuação e retorna
+- Nó 7: saída
+
+**Critério Todos-os-Nós**
+
+| Nó | Caminho | Caso |
+|---|---|---|
+| 0 | C1 | CT16 |
+| 1 | C1 | CT16 |
+| 2 | C1 | CT16 |
+| 3 | C1 | CT16 |
+| 4 | C2 | CT01 |
+| 5 | C2 | CT01 |
+| 6 | C1 | CT16 |
+| 7 | C1 | CT16 |
+
+**Critério Todos-os-Arcos**
+
+| Arco | Caminho | Caso |
+|---|---|---|
+| 0→1 | C1 | CT16 |
+| 1→2 | C1 | CT16 |
+| 2→3 | C1 | CT16 |
+| 2→4 | C2 | CT01 |
+| 4→5 | C2 | CT01 |
+| 4→1 | C3 | CT04 |
+| 3→6 | C1 | CT16 |
+| 5→6 | C2 | CT01 |
+| 6→7 | C1 | CT16 |
+
+
+**Critério Caminhos independentes**
+
 | Caminho | Nós | Situação | Caso |
 |---|---|---|---|
 | C1 | 0-1-2-3-6-7 | sem B após a iteração: encerra sozinho | CT16 |
@@ -344,6 +619,51 @@ private static String lerOpcao(BufferedReader entrada, PrintStream saida) throws
 
 V(G) = 11 − 9 + 2 = **4** = 3 decisões + 1.
 
+**Nós do grafo**
+
+- Nó 0: entrada
+- Nó 1: pede a opção e lê `linha`
+- Nó 2: decisão: `linha == null`?
+- Nó 3: retorna "E"
+- Nó 4: `opcao = linha.trim()`; decisão: `opcao` é "C"?
+- Nó 5: decisão: `opcao` é "E"?
+- Nó 6: retorna `opcao`
+- Nó 7: mostra "Opção inválida."
+- Nó 8: saída
+
+**Critério Todos-os-Nós**
+
+| Nó | Caminho | Caso |
+|---|---|---|
+| 0 | C1 | CE09 |
+| 1 | C1 | CE09 |
+| 2 | C1 | CE09 |
+| 3 | C1 | CE09 |
+| 4 | C2 | CT04 |
+| 5 | C3 | CT01 |
+| 6 | C2 | CT04 |
+| 7 | C4 | CT25 |
+| 8 | C1 | CE09 |
+
+**Critério Todos-os-Arcos**
+
+| Arco | Caminho | Caso |
+|---|---|---|
+| 0→1 | C1 | CE09 |
+| 1→2 | C1 | CE09 |
+| 2→3 | C1 | CE09 |
+| 2→4 | C2 | CT04 |
+| 4→6 | C2 | CT04 |
+| 4→5 | C3 | CT01 |
+| 5→6 | C3 | CT01 |
+| 5→7 | C4 | CT25 |
+| 7→1 | C4 | CT25 |
+| 3→8 | C1 | CE09 |
+| 6→8 | C2 | CT04 |
+
+
+**Critério Caminhos independentes**
+
 | Caminho | Nós | Situação | Caso |
 |---|---|---|---|
 | C1 | 0-1-2-3-8 | a entrada terminou | CE09 |
@@ -353,73 +673,952 @@ V(G) = 11 − 9 + 2 = **4** = 3 decisões + 1.
 
 ### 4.3 Critérios baseados em fluxo de dados
 
-Para os mesmos métodos, as tabelas abaixo listam as associações definição-uso. Um **c-uso** é o uso de uma variável em um cálculo ou chamada, associado ao nó; um **p-uso** é o uso em uma condição, associado a cada arco que sai da decisão. Satisfazer **todos-os-usos** implica satisfazer **todas-as-definições**, **todos-os-c-usos** e **todos-os-p-usos**, e é o critério medido pelo BA-DUA. Atributos do objeto (como `ma` e `p.fome`) aparecem definidos no nó 0 quando o valor vem de fora do método, de uma chamada anterior ou da construção do aquário.
+Os requisitos de fluxo de dados são as associações definição-uso de cada variável: um **c-uso** é o uso em um cálculo ou chamada; um **p-uso** é o uso em uma condição, associado a cada arco que sai da decisão (coluna "Arco para a linha"). Para cada método são apresentados os requisitos de três critérios:
 
-#### 4.3.1 `inteiroPositivo`
+- **todas-as-definições:** para cada definição, ao menos um uso deve ser exercitado;
+- **todos-os-c-usos:** todas as associações com c-uso;
+- **todos-os-p-usos:** todas as associações com p-uso.
 
-| Variável | Definição | Uso | Tipo | Caso |
+Os requisitos foram obtidos do BA-DUA, que os calcula a partir do código compilado, e conferidos com a análise manual dos seis métodos da seção 4.2. Para indicar o caso que cobre cada associação, o BA-DUA foi executado separadamente para cada um dos 87 casos; a coluna Caso mostra o primeiro caso, na ordem CT01…CT69 e depois CE01…CE19, que exercita a associação. As linhas referem-se ao código do Apêndice B. Parâmetros aparecem definidos na primeira linha do corpo do método, e `this` representa o próprio objeto. Duas linhas iguais em uma tabela de p-usos correspondem a decisões diferentes na mesma linha do código, como as duas partes de uma condição `a || b`, ou à definição inicial e ao incremento de um laço `for`, que ficam na mesma linha.
+
+O relatório XML do BA-DUA não lista 25 associações que envolvem as variáveis criadas pelo compilador para os laços `for (... : ...)` (11 em `vizinhoVazio`, 11 em `vizinhoDoTipo` e 3 em `iterar`), porque elas não têm nome no código-fonte. Essas associações entram nas contagens por método, que seguem o relatório de texto da ferramenta; duas delas são inalcançáveis (Apêndice A).
+
+| Método | Associações | Cobertas | Inalcançáveis |
+|---|---|---|---|
+| `Aquario.inicializar` | 109 | 104 | 5 |
+| `Aquario.inteiroPositivo` | 18 | 18 | 0 |
+| `Aquario.lerMatriz` | 25 | 24 | 1 |
+| `Aquario.iterar` | 59 | 57 | 2 |
+| `Aquario.agirA` | 37 | 35 | 2 |
+| `Aquario.agirB` | 52 | 51 | 1 |
+| `Aquario.vizinhoVazio` | 31 | 30 | 1 |
+| `Aquario.vizinhoDoTipo` | 41 | 40 | 1 |
+| `Aquario.dentro` | 16 | 16 | 0 |
+| `Aquario.temPeixeB` | 46 | 44 | 2 |
+| `Aquario.getMatriz` | 50 | 44 | 6 |
+| `Jogo.executar` | 11 | 11 | 0 |
+| `Jogo.lerOpcao` | 9 | 9 | 0 |
+| `Main.executar` | 40 | 37 | 3 |
+| `Main.lerLinha` | 3 | 3 | 0 |
+| **Total** | **547** | **523** | **24** |
+
+#### 4.3.1 `Aquario.inicializar`
+
+109 associações, 104 cobertas, 5 inalcançáveis.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `A` | 46 | 73 | CT01 |
+| `B` | 46 | 76 | CT01 |
+| `vx` | 46 | 84 (arco para 85) | CT55 |
+| `vy` | 47 | 87 (arco para 88) | CT58 |
+| `vra` | 48 | 90 | CT01 |
+| `vma` | 49 | 90 | CT01 |
+| `vrb` | 50 | 90 | CT01 |
+| `vmb` | 51 | 90 | CT01 |
+| `vm` | 52 | 56 (arco para 57) | CT52 |
+| `vn` | 53 | 66 | CT01 |
+| `celulas` | 55 | 56 (arco para 57) | CT52 |
+| `i` | 59 | 59 (arco para 60) | CT01 |
+| `grade` | 66 | 90 | CT01 |
+| `contaA` | 67 | 84 (arco para 85) | CE07 |
+| `contaB` | 68 | 87 (arco para 88) | CT59 |
+| `i` | 69 | 69 (arco para 70) | CT01 |
+| `j` | 70 | 70 (arco para 71) | CT01 |
+| `s` | 71 | 72 (arco para 73) | CT01 |
+| `contaA` | 74 | 84 (arco para 85) | CT55 |
+| `contaB` | 77 | 87 (arco para 88) | CT58 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `A` | 46 | 73 | CT01 |
+| `B` | 46 | 76 | CT01 |
+| `vx` | 46 | 85 | CT55 |
+| `vy` | 47 | 88 | CT58 |
+| `vra` | 48 | 90 | CT01 |
+| `vma` | 49 | 90 | CT01 |
+| `vrb` | 50 | 90 | CT01 |
+| `vmb` | 51 | 90 | CT01 |
+| `vm` | 52 | 66 | CT01 |
+| `vm` | 52 | 90 | CT01 |
+| `vm` | 52 | 57 | CT52 |
+| `vn` | 53 | 66 | CT01 |
+| `vn` | 53 | 90 | CT01 |
+| `vn` | 53 | 61 | CT53 |
+| `celulas` | 55 | 71 | CT01 |
+| `celulas` | 55 | 61 | CT53 |
+| `celulas` | 55 | 57 | CT52 |
+| `i` | 59 | 59 | CT01 |
+| `i` | 59 | 61 | CE06 |
+| `i` | 59 | 59 | CT11 |
+| `i` | 59 | 61 | CT53 |
+| `grade` | 66 | 90 | CT01 |
+| `grade` | 66 | 76 | CT01 |
+| `grade` | 66 | 73 | CT01 |
+| `contaA` | 67 | 85 | CE07 |
+| `contaA` | 67 | 74 | CT01 |
+| `contaB` | 68 | 88 | CT59 |
+| `contaB` | 68 | 77 | CT01 |
+| `i` | 69 | 69 | CT01 |
+| `i` | 69 | 71 | CT01 |
+| `i` | 69 | 79 | CT54 |
+| `i` | 69 | 76 | CT01 |
+| `i` | 69 | 76 | CT01 |
+| `i` | 69 | 73 | CT01 |
+| `i` | 69 | 73 | CT01 |
+| `j` | 70 | 71 | CT01 |
+| `j` | 70 | 70 | CT01 |
+| `j` | 70 | 79 | CE04 |
+| `j` | 70 | 76 | CT07 |
+| `j` | 70 | 76 | CT07 |
+| `j` | 70 | 73 | CT01 |
+| `j` | 70 | 73 | CT01 |
+| `s` | 71 | 79 | CT54 |
+| `contaA` | 74 | 85 | CT55 |
+| `contaA` | 74 | 74 | CT07 |
+| `contaB` | 77 | 88 | CT58 |
+| `contaB` | 77 | 77 | CT15 |
+| `j` | 70 | 71 | CT01 |
+| `j` | 70 | 70 | CT01 |
+| `j` | 70 | 79 | CT54 |
+| `j` | 70 | 76 | CT01 |
+| `j` | 70 | 76 | CT01 |
+| `j` | 70 | 73 | CT07 |
+| `j` | 70 | 73 | CT07 |
+| `i` | 69 | 69 | CT11 |
+| `i` | 69 | 71 | CT11 |
+| `i` | 69 | 79 | CE16 |
+| `i` | 69 | 76 | CT11 |
+| `i` | 69 | 76 | CT11 |
+| `i` | 69 | 73 | CT21 |
+| `i` | 69 | 73 | CT21 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
 |---|---|---|---|---|
-| valor | 0 | 1 | c-uso | CT01 |
-| valor, nome | 0 | 3 / 5 / 8 / 9 | c-uso (mensagem) | CT36 / CE02 / CT37 / CE01 |
-| texto | 1 | (1,2) e (1,7) | p-uso | CT01 e CT37 |
-| texto | 1 | 2 | c-uso | CT01 |
-| texto | 1 | (7,8) e (7,9) | p-uso | CT37 e CE01 |
-| numero | 2 | (2,3) e (2,4) | p-uso | CT36 e CT01 |
-| numero | 2 | (4,5) e (4,6) | p-uso | CE02 e CT01 |
-| numero | 2 | 6 | c-uso | CT01 |
+| `vx` | 46 | 84 | 85 | CT55 |
+| `vx` | 46 | 84 | 87 | CT01 |
+| `vy` | 47 | 87 | 88 | CT58 |
+| `vy` | 47 | 87 | 90 | CT01 |
+| `vm` | 52 | 56 | 57 | CT52 |
+| `vm` | 52 | 56 | 59 | CT01 |
+| `vm` | 52 | 59 | 60 | CT01 |
+| `vm` | 52 | 59 | 66 | CT01 |
+| `vm` | 52 | 69 | 70 | CT01 |
+| `vm` | 52 | 69 | 84 | CT01 |
+| `vn` | 53 | 70 | 71 | CT01 |
+| `vn` | 53 | 70 | 69 | CT01 |
+| `vn` | 53 | 60 | 61 | CT53 |
+| `vn` | 53 | 60 | 59 | CT01 |
+| `celulas` | 55 | 56 | 57 | CT52 |
+| `celulas` | 55 | 56 | 59 | CT01 |
+| `celulas` | 55 | 60 | 61 | CT53 |
+| `celulas` | 55 | 60 | 59 | CT01 |
+| `i` | 59 | 59 | 60 | CT01 |
+| `i` | 59 | 59 | 66 | **inalcançável** (Apêndice A) |
+| `i` | 59 | 60 | 61 | CE06 |
+| `i` | 59 | 60 | 59 | CT01 |
+| `i` | 59 | 59 | 60 | CT11 |
+| `i` | 59 | 59 | 66 | CT01 |
+| `i` | 59 | 60 | 61 | CT53 |
+| `i` | 59 | 60 | 59 | CT11 |
+| `contaA` | 67 | 84 | 85 | CE07 |
+| `contaA` | 67 | 84 | 87 | **inalcançável** (Apêndice A) |
+| `contaB` | 68 | 87 | 88 | CT59 |
+| `contaB` | 68 | 87 | 90 | **inalcançável** (Apêndice A) |
+| `i` | 69 | 69 | 70 | CT01 |
+| `i` | 69 | 69 | 84 | **inalcançável** (Apêndice A) |
+| `j` | 70 | 70 | 71 | CT01 |
+| `j` | 70 | 70 | 69 | **inalcançável** (Apêndice A) |
+| `s` | 71 | 72 | 73 | CT01 |
+| `s` | 71 | 72 | 75 | CT01 |
+| `s` | 71 | 75 | 76 | CT01 |
+| `s` | 71 | 75 | 78 | CT01 |
+| `s` | 71 | 78 | 79 | CT54 |
+| `s` | 71 | 78 | 70 | CT01 |
+| `contaA` | 74 | 84 | 85 | CT55 |
+| `contaA` | 74 | 84 | 87 | CT01 |
+| `contaB` | 77 | 87 | 88 | CT58 |
+| `contaB` | 77 | 87 | 90 | CT01 |
+| `j` | 70 | 70 | 71 | CT01 |
+| `j` | 70 | 70 | 69 | CT01 |
+| `i` | 69 | 69 | 70 | CT11 |
+| `i` | 69 | 69 | 84 | CT01 |
 
-Todas as associações são alcançáveis e estão cobertas.
+#### 4.3.2 `Aquario.inteiroPositivo`
 
-#### 4.3.2 `agirA`
+18 associações; todas cobertas.
 
-| Variável | Definição | Uso | Tipo | Caso |
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `nome` | 95 | 109 | CE01 |
+| `valor` | 95 | 109 | CE01 |
+| `texto` | 95 | 96 (arco para 97) | CT01 |
+| `numero` | 97 | 98 (arco para 99) | CT36 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `nome` | 95 | 109 | CE01 |
+| `nome` | 95 | 107 | CT37 |
+| `nome` | 95 | 102 | CE02 |
+| `nome` | 95 | 99 | CT36 |
+| `valor` | 95 | 109 | CE01 |
+| `valor` | 95 | 107 | CT37 |
+| `valor` | 95 | 102 | CE02 |
+| `valor` | 95 | 99 | CT36 |
+| `texto` | 95 | 97 | CT01 |
+| `numero` | 97 | 104 | CT01 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
 |---|---|---|---|---|
-| livre | 1 | (1,2) e (1,3) | p-uso | CT01 e CT20 |
-| livre | 1 | 2 | c-uso | CT01 |
-| p.movimentos | 0 | 2 (`++`) | c-uso | CT01 |
-| p.fome | 0 | 3 (`++`) | c-uso | CT20 |
-| p.fome | 2 | (4,6) | p-uso | CT01 |
-| p.fome | 2 | (4,5) | p-uso | **inalcançável**: fome 0 nunca atinge MA ≥ 1 |
-| p.fome | 3 | (4,5) e (4,6) | p-uso | CT07 e CT20 |
-| p.movimentos | 2 | (6,7) e (6,8) | p-uso | CT02 e CT01 |
-| p.movimentos | 3 | (6,8) | p-uso | CT20 |
-| p.movimentos | 3 | (6,7) | p-uso | **inalcançável**: 0 movimentos nunca atinge RA ≥ 1 |
-| ma | 0 | (4,5) e (4,6) | p-uso | CT07 e CT01 |
-| ra | 0 | (6,7) e (6,8) | p-uso | CT02 e CT01 |
+| `texto` | 95 | 96 | 97 | CT01 |
+| `texto` | 95 | 96 | 106 | CT37 |
+| `texto` | 95 | 106 | 107 | CT37 |
+| `texto` | 95 | 106 | 109 | CE01 |
+| `numero` | 97 | 98 | 99 | CT36 |
+| `numero` | 97 | 98 | 101 | CT01 |
+| `numero` | 97 | 101 | 102 | CE02 |
+| `numero` | 97 | 101 | 104 | CT01 |
 
-#### 4.3.3 `agirB`
+#### 4.3.3 `Aquario.lerMatriz`
 
-| Variável | Definição | Uso | Tipo | Caso |
+25 associações, 24 cobertas, 1 inalcançáveis.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `texto` | 113 | 114 (arco para 114) | CE03 |
+| `texto` | 115 | 117 | CE03 |
+| `partes` | 117 | 119 (arco para 120) | CT01 |
+| `celulas` | 118 | 123 | CT01 |
+| `i` | 119 | 119 (arco para 120) | CT01 |
+| `linha` | 120 | 121 (arco para 121) | CE05 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `texto` | 113 | 117 | CT01 |
+| `texto` | 113 | 115 | CE03 |
+| `texto` | 115 | 117 | CE03 |
+| `partes` | 117 | 120 | CT01 |
+| `celulas` | 118 | 123 | CT01 |
+| `celulas` | 118 | 121 | CT01 |
+| `i` | 119 | 120 | CT01 |
+| `i` | 119 | 121 | CT01 |
+| `i` | 119 | 119 | CT01 |
+| `linha` | 120 | 121 | CT01 |
+| `i` | 119 | 120 | CT11 |
+| `i` | 119 | 121 | CT11 |
+| `i` | 119 | 119 | CT11 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
 |---|---|---|---|---|
-| presa | 1 | (1,2) e (1,3) | p-uso | CT12 e CT01 |
-| presa | 1 | 2 | c-uso | CT12 |
-| livre | 3 | (3,4) e (3,5) | p-uso | CT01 e CT20 |
-| livre | 3 | 4 | c-uso | CT01 |
-| p.fome | 0 | 5 (`++`) | c-uso | CT01 |
-| p.fome | 2 | (6,8) | p-uso | CT12 |
-| p.fome | 2 | (6,7) | p-uso | **inalcançável**: comer zera a fome |
-| p.fome | 5 | (6,7) e (6,8) | p-uso | CT16 e CT01 |
-| p.consumos | 0 | 2 (`++`) | c-uso | CT12 |
-| p.consumos | 0 | (8,9) | p-uso | CT22 (reprodução adiada, sem comer) |
-| p.consumos | 0 | (8,11) | p-uso | CT01 |
-| p.consumos | 2 | (8,9) e (8,11) | p-uso | CT14 e CT12 |
-| mb | 0 | (6,7) e (6,8) | p-uso | CT16 e CT01 |
-| rb | 0 | (8,9) e (8,11) | p-uso | CT14 e CT01 |
+| `texto` | 113 | 114 | 114 | CE03 |
+| `texto` | 113 | 114 | 117 | CT01 |
+| `texto` | 113 | 114 | 115 | CE03 |
+| `texto` | 113 | 114 | 117 | CE04 |
+| `partes` | 117 | 119 | 120 | CT01 |
+| `partes` | 117 | 119 | 123 | CT01 |
+| `i` | 119 | 119 | 120 | CT01 |
+| `i` | 119 | 119 | 123 | **inalcançável** (Apêndice A) |
+| `linha` | 120 | 121 | 121 | CE05 |
+| `linha` | 120 | 121 | 121 | CT01 |
+| `i` | 119 | 119 | 120 | CT11 |
+| `i` | 119 | 119 | 123 | CT01 |
 
-#### 4.3.4 `iterar`, `executar` e `lerOpcao`
+#### 4.3.4 `Aquario.iterar`
 
-| Método | Variável | Definição | Uso | Caso |
+59 associações, 57 cobertas, 2 inalcançáveis. O XML lista 56; as demais envolvem a variável interna do laço for-each.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `this` | 132 | 133 (arco para 134) | CT01 |
+| `this.linhas` | 132 | 133 (arco para 134) | CT01 |
+| `this.colunas` | 132 | 134 (arco para 135) | CT01 |
+| `this.grade` | 132 | 135 (arco para 136) | CT01 |
+| `A` | 132 | 144 (arco para 145) | CT01 |
+| `this.pontuacao` | 132 | 150 | CT01 |
+| `ordem` | 132 | 140 | CT01 |
+| `i` | 133 | 133 (arco para 134) | CT01 |
+| `j` | 134 | 134 (arco para 135) | CT01 |
+| `p` | 140 | 141 (arco para 142) | CT12 |
+| `p.vivo` | 140 | 141 (arco para 142) | CT12 |
+| `p.tipo` | 140 | 144 (arco para 145) | CT01 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `this` | 132 | 150 | CT01 |
+| `this` | 132 | 147 | CT01 |
+| `this` | 132 | 145 | CT01 |
+| `this` | 132 | 136 | CT01 |
+| `this.grade` | 132 | 136 | CT01 |
+| `this.pontuacao` | 132 | 150 | CT01 |
+| `ordem` | 132 | 140 | CT01 |
+| `ordem` | 132 | 136 | CT01 |
+| `i` | 133 | 133 | CT01 |
+| `i` | 133 | 136 | CT01 |
+| `j` | 134 | 134 | CT01 |
+| `j` | 134 | 136 | CT01 |
+| `j` | 134 | 134 | CT01 |
+| `j` | 134 | 136 | CT01 |
+| `i` | 133 | 133 | CT11 |
+| `i` | 133 | 136 | CT11 |
+| `p` | 140 | 147 | CT01 |
+| `p` | 140 | 145 | CT01 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
 |---|---|---|---|---|
-| `iterar` | ordem | 1 | 6 (c-uso), 9 (c-uso) | CT01 |
-| `iterar` | p | 9 | (10,9), (10,11) | CT12 e CT01 |
-| `iterar` | p | 9 | (11,12), (11,13), 12, 13 | CT01 |
-| `iterar` | i, j | 1 / 3 (inicial) | arcos de saída sem volta | **inalcançáveis**: M, N ≥ 1 |
-| `executar` | aquario | 0 | 1, 2, 6 | CT01 |
-| `lerOpcao` | linha | 1 | (2,3) e (2,4) | CE09 e CT01 |
-| `lerOpcao` | linha | 1 | 4 | CT01 |
-| `lerOpcao` | opcao | 4 | (4,6) e (4,5) | CT04 e CT01 |
-| `lerOpcao` | opcao | 4 | (5,6) e (5,7) | CT01 e CT25 |
-| `lerOpcao` | opcao | 4 | 6 | CT04 |
+| `this` | 132 | 133 | 134 | CT01 |
+| `this` | 132 | 133 | 140 | CT01 |
+| `this` | 132 | 134 | 135 | CT01 |
+| `this` | 132 | 134 | 133 | CT01 |
+| `this` | 132 | 135 | 136 | CT01 |
+| `this` | 132 | 135 | 134 | CT01 |
+| `this.linhas` | 132 | 133 | 134 | CT01 |
+| `this.linhas` | 132 | 133 | 140 | CT01 |
+| `this.colunas` | 132 | 134 | 135 | CT01 |
+| `this.colunas` | 132 | 134 | 133 | CT01 |
+| `this.grade` | 132 | 135 | 136 | CT01 |
+| `this.grade` | 132 | 135 | 134 | CT01 |
+| `A` | 132 | 144 | 145 | CT01 |
+| `A` | 132 | 144 | 147 | CT01 |
+| `i` | 133 | 133 | 134 | CT01 |
+| `i` | 133 | 133 | 140 | **inalcançável** (Apêndice A) |
+| `i` | 133 | 135 | 136 | CT01 |
+| `i` | 133 | 135 | 134 | CT01 |
+| `j` | 134 | 134 | 135 | CT01 |
+| `j` | 134 | 134 | 133 | **inalcançável** (Apêndice A) |
+| `j` | 134 | 135 | 136 | CT01 |
+| `j` | 134 | 135 | 134 | CT04 |
+| `j` | 134 | 134 | 135 | CT01 |
+| `j` | 134 | 134 | 133 | CT01 |
+| `j` | 134 | 135 | 136 | CT01 |
+| `j` | 134 | 135 | 134 | CT01 |
+| `i` | 133 | 133 | 134 | CT11 |
+| `i` | 133 | 133 | 140 | CT01 |
+| `i` | 133 | 135 | 136 | CT11 |
+| `i` | 133 | 135 | 134 | CT11 |
+| `p` | 140 | 141 | 142 | CT12 |
+| `p` | 140 | 141 | 144 | CT01 |
+| `p` | 140 | 144 | 145 | CT01 |
+| `p` | 140 | 144 | 147 | CT01 |
+| `p.vivo` | 140 | 141 | 142 | CT12 |
+| `p.vivo` | 140 | 141 | 144 | CT01 |
+| `p.tipo` | 140 | 144 | 145 | CT01 |
+| `p.tipo` | 140 | 144 | 147 | CT01 |
+
+#### 4.3.5 `Aquario.agirA`
+
+37 associações, 35 cobertas, 2 inalcançáveis.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `this` | 155 | 164 (arco para 165) | CT07 |
+| `p` | 155 | 161 | CT07 |
+| `p.movimentos` | 155 | 158 | CT01 |
+| `p.fome` | 155 | 162 | CT07 |
+| `this.ma` | 155 | 164 (arco para 165) | CT07 |
+| `this.ra` | 155 | 168 (arco para 171) | CT02 |
+| `A` | 155 | 171 | CT02 |
+| `livre` | 155 | 156 (arco para 157) | CT01 |
+| `p.movimentos` | 158 | 168 (arco para 171) | CT02 |
+| `p.fome` | 159 | 164 (arco para 168) | CT01 |
+| `p.movimentos` | 161 | 168 (arco para 174) | CT08 |
+| `p.fome` | 162 | 164 (arco para 165) | CT07 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `this` | 155 | 171 | CT02 |
+| `this` | 155 | 165 | CT07 |
+| `this` | 155 | 157 | CT01 |
+| `p` | 155 | 161 | CT07 |
+| `p` | 155 | 162 | CT07 |
+| `p` | 155 | 171 | CT02 |
+| `p` | 155 | 172 | CT02 |
+| `p` | 155 | 165 | CT07 |
+| `p` | 155 | 157 | CT01 |
+| `p` | 155 | 158 | CT01 |
+| `p` | 155 | 159 | CT01 |
+| `p.movimentos` | 155 | 158 | CT01 |
+| `p.fome` | 155 | 162 | CT07 |
+| `A` | 155 | 171 | CT02 |
+| `livre` | 155 | 157 | CT01 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `this` | 155 | 164 | 165 | CT07 |
+| `this` | 155 | 164 | 168 | CT01 |
+| `this` | 155 | 168 | 171 | CT02 |
+| `this` | 155 | 168 | 174 | CT01 |
+| `p` | 155 | 164 | 165 | CT07 |
+| `p` | 155 | 164 | 168 | CT01 |
+| `p` | 155 | 168 | 171 | CT02 |
+| `p` | 155 | 168 | 174 | CT01 |
+| `this.ma` | 155 | 164 | 165 | CT07 |
+| `this.ma` | 155 | 164 | 168 | CT01 |
+| `this.ra` | 155 | 168 | 171 | CT02 |
+| `this.ra` | 155 | 168 | 174 | CT01 |
+| `livre` | 155 | 156 | 157 | CT01 |
+| `livre` | 155 | 156 | 161 | CT07 |
+| `p.movimentos` | 158 | 168 | 171 | CT02 |
+| `p.movimentos` | 158 | 168 | 174 | CT01 |
+| `p.fome` | 159 | 164 | 165 | **inalcançável** (Apêndice A) |
+| `p.fome` | 159 | 164 | 168 | CT01 |
+| `p.movimentos` | 161 | 168 | 171 | **inalcançável** (Apêndice A) |
+| `p.movimentos` | 161 | 168 | 174 | CT08 |
+| `p.fome` | 162 | 164 | 165 | CT07 |
+| `p.fome` | 162 | 164 | 168 | CT08 |
+
+#### 4.3.6 `Aquario.agirB`
+
+52 associações, 51 cobertas, 1 inalcançáveis.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `this` | 178 | 185 | CT01 |
+| `p` | 178 | 185 | CT01 |
+| `this.grade` | 178 | 180 | CT04 |
+| `p.consumos` | 178 | 195 (arco para 195) | CT22 |
+| `p.fome` | 178 | 189 | CT01 |
+| `this.mb` | 178 | 191 (arco para 192) | CT05 |
+| `this.rb` | 178 | 195 (arco para 195) | CT08 |
+| `B` | 178 | 195 (arco para 199) | CT08 |
+| `presa` | 178 | 179 (arco para 180) | CT04 |
+| `p.consumos` | 182 | 195 (arco para 195) | CT08 |
+| `p.fome` | 183 | 191 (arco para 195) | CT04 |
+| `livre` | 185 | 186 (arco para 187) | CT01 |
+| `p.fome` | 189 | 191 (arco para 192) | CT05 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `this` | 178 | 185 | CT01 |
+| `this` | 178 | 199 | CT08 |
+| `this` | 178 | 192 | CT05 |
+| `this` | 178 | 187 | CT01 |
+| `this` | 178 | 180 | CT04 |
+| `this` | 178 | 181 | CT04 |
+| `p` | 178 | 185 | CT01 |
+| `p` | 178 | 189 | CT01 |
+| `p` | 178 | 199 | CT08 |
+| `p` | 178 | 200 | CT08 |
+| `p` | 178 | 192 | CT05 |
+| `p` | 178 | 187 | CT01 |
+| `p` | 178 | 181 | CT04 |
+| `p` | 178 | 182 | CT04 |
+| `p` | 178 | 183 | CT04 |
+| `this.grade` | 178 | 180 | CT04 |
+| `p.consumos` | 178 | 182 | CT04 |
+| `p.fome` | 178 | 189 | CT01 |
+| `B` | 178 | 199 | CT08 |
+| `presa` | 178 | 180 | CT04 |
+| `presa` | 178 | 181 | CT04 |
+| `livre` | 185 | 187 | CT01 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `this` | 178 | 191 | 192 | CT05 |
+| `this` | 178 | 191 | 195 | CT01 |
+| `this` | 178 | 195 | 195 | CT08 |
+| `this` | 178 | 195 | 202 | CT01 |
+| `this` | 178 | 195 | 199 | CT08 |
+| `this` | 178 | 195 | 202 | CT15 |
+| `p` | 178 | 191 | 192 | CT05 |
+| `p` | 178 | 191 | 195 | CT01 |
+| `p` | 178 | 195 | 195 | CT08 |
+| `p` | 178 | 195 | 202 | CT01 |
+| `p` | 178 | 195 | 199 | CT08 |
+| `p` | 178 | 195 | 202 | CT15 |
+| `p.consumos` | 178 | 195 | 195 | CT22 |
+| `p.consumos` | 178 | 195 | 202 | CT01 |
+| `this.mb` | 178 | 191 | 192 | CT05 |
+| `this.mb` | 178 | 191 | 195 | CT01 |
+| `this.rb` | 178 | 195 | 195 | CT08 |
+| `this.rb` | 178 | 195 | 202 | CT01 |
+| `B` | 178 | 195 | 199 | CT08 |
+| `B` | 178 | 195 | 202 | CT15 |
+| `presa` | 178 | 179 | 180 | CT04 |
+| `presa` | 178 | 179 | 185 | CT01 |
+| `p.consumos` | 182 | 195 | 195 | CT08 |
+| `p.consumos` | 182 | 195 | 202 | CT04 |
+| `p.fome` | 183 | 191 | 192 | **inalcançável** (Apêndice A) |
+| `p.fome` | 183 | 191 | 195 | CT04 |
+| `livre` | 185 | 186 | 187 | CT01 |
+| `livre` | 185 | 186 | 189 | CT20 |
+| `p.fome` | 189 | 191 | 192 | CT05 |
+| `p.fome` | 189 | 191 | 195 | CT01 |
+
+#### 4.3.7 `Aquario.vizinhoVazio`
+
+31 associações, 30 cobertas, 1 inalcançáveis. O XML lista 20; as demais envolvem a variável interna do laço for-each.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `this` | 205 | 208 (arco para 208) | CT01 |
+| `p` | 205 | 206 | CT01 |
+| `p.linha` | 205 | 206 | CT01 |
+| `p.coluna` | 205 | 207 | CT01 |
+| `this.grade` | 205 | 208 (arco para 209) | CT01 |
+| `i` | 206 | 208 (arco para 208) | CT01 |
+| `j` | 207 | 208 (arco para 208) | CT01 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `p` | 205 | 206 | CT01 |
+| `p` | 205 | 207 | CT01 |
+| `p.linha` | 205 | 206 | CT01 |
+| `p.coluna` | 205 | 207 | CT01 |
+| `i` | 206 | 209 | CT01 |
+| `j` | 207 | 209 | CT01 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `this` | 205 | 208 | 208 | CT01 |
+| `this` | 205 | 208 | 205 | CT01 |
+| `this` | 205 | 208 | 209 | CT01 |
+| `this` | 205 | 208 | 205 | CT07 |
+| `this.grade` | 205 | 208 | 209 | CT01 |
+| `this.grade` | 205 | 208 | 205 | CT07 |
+| `i` | 206 | 208 | 208 | CT01 |
+| `i` | 206 | 208 | 205 | CT01 |
+| `i` | 206 | 208 | 209 | CT01 |
+| `i` | 206 | 208 | 205 | CT07 |
+| `j` | 207 | 208 | 208 | CT01 |
+| `j` | 207 | 208 | 205 | CT01 |
+| `j` | 207 | 208 | 209 | CT01 |
+| `j` | 207 | 208 | 205 | CT07 |
+
+#### 4.3.8 `Aquario.vizinhoDoTipo`
+
+41 associações, 40 cobertas, 1 inalcançáveis. O XML lista 30; as demais envolvem a variável interna do laço for-each.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `this` | 216 | 219 (arco para 219) | CT01 |
+| `p` | 216 | 217 | CT01 |
+| `tipo` | 216 | 219 (arco para 220) | CT04 |
+| `p.linha` | 216 | 217 | CT01 |
+| `p.coluna` | 216 | 218 | CT01 |
+| `this.grade` | 216 | 219 (arco para 219) | CT04 |
+| `i` | 217 | 219 (arco para 219) | CT01 |
+| `j` | 218 | 219 (arco para 219) | CT01 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `p` | 216 | 217 | CT01 |
+| `p` | 216 | 218 | CT01 |
+| `p.linha` | 216 | 217 | CT01 |
+| `p.coluna` | 216 | 218 | CT01 |
+| `i` | 217 | 220 | CT04 |
+| `j` | 218 | 220 | CT04 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `this` | 216 | 219 | 219 | CT01 |
+| `this` | 216 | 219 | 216 | CT01 |
+| `this` | 216 | 219 | 219 | CT04 |
+| `this` | 216 | 219 | 216 | CT01 |
+| `this` | 216 | 219 | 220 | CT04 |
+| `this` | 216 | 219 | 216 | CT08 |
+| `tipo` | 216 | 219 | 220 | CT04 |
+| `tipo` | 216 | 219 | 216 | CT08 |
+| `this.grade` | 216 | 219 | 219 | CT04 |
+| `this.grade` | 216 | 219 | 216 | CT01 |
+| `this.grade` | 216 | 219 | 220 | CT04 |
+| `this.grade` | 216 | 219 | 216 | CT08 |
+| `i` | 217 | 219 | 219 | CT01 |
+| `i` | 217 | 219 | 216 | CT01 |
+| `i` | 217 | 219 | 219 | CT04 |
+| `i` | 217 | 219 | 216 | CT01 |
+| `i` | 217 | 219 | 220 | CT04 |
+| `i` | 217 | 219 | 216 | CT08 |
+| `j` | 218 | 219 | 219 | CT01 |
+| `j` | 218 | 219 | 216 | CT01 |
+| `j` | 218 | 219 | 219 | CT04 |
+| `j` | 218 | 219 | 216 | CT01 |
+| `j` | 218 | 219 | 220 | CT04 |
+| `j` | 218 | 219 | 216 | CT08 |
+
+#### 4.3.9 `Aquario.dentro`
+
+16 associações; todas cobertas.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `this` | 227 | 227 (arco para 227) | CT01 |
+| `i` | 227 | 227 (arco para 227) | CT01 |
+| `j` | 227 | 227 (arco para 227) | CT01 |
+| `this.linhas` | 227 | 227 (arco para 227) | CT01 |
+| `this.colunas` | 227 | 227 (arco para 227) | CT01 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `this` | 227 | 227 | 227 | CT01 |
+| `this` | 227 | 227 | 227 | CT01 |
+| `this` | 227 | 227 | 227 | CT01 |
+| `this` | 227 | 227 | 227 | CT01 |
+| `i` | 227 | 227 | 227 | CT01 |
+| `i` | 227 | 227 | 227 | CT01 |
+| `i` | 227 | 227 | 227 | CT01 |
+| `i` | 227 | 227 | 227 | CT01 |
+| `j` | 227 | 227 | 227 | CT01 |
+| `j` | 227 | 227 | 227 | CT01 |
+| `j` | 227 | 227 | 227 | CT01 |
+| `j` | 227 | 227 | 227 | CT01 |
+| `this.linhas` | 227 | 227 | 227 | CT01 |
+| `this.linhas` | 227 | 227 | 227 | CT01 |
+| `this.colunas` | 227 | 227 | 227 | CT01 |
+| `this.colunas` | 227 | 227 | 227 | CT01 |
+
+#### 4.3.10 `Aquario.temPeixeB`
+
+46 associações, 44 cobertas, 2 inalcançáveis.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `this` | 248 | 248 (arco para 249) | CT01 |
+| `this.linhas` | 248 | 248 (arco para 249) | CT01 |
+| `this.colunas` | 248 | 249 (arco para 250) | CT01 |
+| `this.grade` | 248 | 250 (arco para 250) | CT01 |
+| `B` | 248 | 250 (arco para 251) | CT01 |
+| `i` | 248 | 248 (arco para 249) | CT01 |
+| `j` | 249 | 249 (arco para 250) | CT01 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `i` | 248 | 248 | CT05 |
+| `j` | 249 | 249 | CT01 |
+| `j` | 249 | 249 | CT01 |
+| `i` | 248 | 248 | CT24 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `this` | 248 | 248 | 249 | CT01 |
+| `this` | 248 | 248 | 255 | CT05 |
+| `this` | 248 | 249 | 250 | CT01 |
+| `this` | 248 | 249 | 248 | CT05 |
+| `this` | 248 | 250 | 250 | CT01 |
+| `this` | 248 | 250 | 249 | CT01 |
+| `this` | 248 | 250 | 251 | CT01 |
+| `this` | 248 | 250 | 249 | CT01 |
+| `this.linhas` | 248 | 248 | 249 | CT01 |
+| `this.linhas` | 248 | 248 | 255 | CT05 |
+| `this.colunas` | 248 | 249 | 250 | CT01 |
+| `this.colunas` | 248 | 249 | 248 | CT05 |
+| `this.grade` | 248 | 250 | 250 | CT01 |
+| `this.grade` | 248 | 250 | 249 | CT01 |
+| `this.grade` | 248 | 250 | 251 | CT01 |
+| `this.grade` | 248 | 250 | 249 | CT01 |
+| `B` | 248 | 250 | 251 | CT01 |
+| `B` | 248 | 250 | 249 | CT01 |
+| `i` | 248 | 248 | 249 | CT01 |
+| `i` | 248 | 248 | 255 | **inalcançável** (Apêndice A) |
+| `i` | 248 | 250 | 250 | CT01 |
+| `i` | 248 | 250 | 249 | CT01 |
+| `i` | 248 | 250 | 251 | CT01 |
+| `i` | 248 | 250 | 249 | CT01 |
+| `j` | 249 | 249 | 250 | CT01 |
+| `j` | 249 | 249 | 248 | **inalcançável** (Apêndice A) |
+| `j` | 249 | 250 | 250 | CT02 |
+| `j` | 249 | 250 | 249 | CT01 |
+| `j` | 249 | 250 | 251 | CT08 |
+| `j` | 249 | 250 | 249 | CT02 |
+| `j` | 249 | 249 | 250 | CT01 |
+| `j` | 249 | 249 | 248 | CT05 |
+| `j` | 249 | 250 | 250 | CT01 |
+| `j` | 249 | 250 | 249 | CT05 |
+| `j` | 249 | 250 | 251 | CT01 |
+| `j` | 249 | 250 | 249 | CT01 |
+| `i` | 248 | 248 | 249 | CT11 |
+| `i` | 248 | 248 | 255 | CT05 |
+| `i` | 248 | 250 | 250 | CT11 |
+| `i` | 248 | 250 | 249 | CT11 |
+| `i` | 248 | 250 | 251 | CT11 |
+| `i` | 248 | 250 | 249 | CT11 |
+
+#### 4.3.11 `Aquario.getMatriz`
+
+50 associações, 44 cobertas, 6 inalcançáveis.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `this` | 265 | 266 (arco para 267) | CT01 |
+| `this.linhas` | 265 | 266 (arco para 267) | CT01 |
+| `this.colunas` | 265 | 270 (arco para 271) | CT01 |
+| `this.grade` | 265 | 274 (arco para 274) | CT01 |
+| `sb` | 265 | 277 | CT01 |
+| `i` | 266 | 266 (arco para 267) | CT01 |
+| `j` | 270 | 270 (arco para 271) | CT01 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `this` | 265 | 274 | CT01 |
+| `this.grade` | 265 | 274 | CT01 |
+| `sb` | 265 | 277 | CT01 |
+| `sb` | 265 | 274 | CT01 |
+| `sb` | 265 | 272 | CT01 |
+| `sb` | 265 | 268 | CT11 |
+| `i` | 266 | 266 | CT01 |
+| `i` | 266 | 274 | CT01 |
+| `j` | 270 | 274 | CT01 |
+| `j` | 270 | 270 | CT01 |
+| `j` | 270 | 274 | CT01 |
+| `j` | 270 | 270 | CT01 |
+| `i` | 266 | 266 | CT11 |
+| `i` | 266 | 274 | CT11 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `this` | 265 | 266 | 267 | CT01 |
+| `this` | 265 | 266 | 277 | CT01 |
+| `this` | 265 | 270 | 271 | CT01 |
+| `this` | 265 | 270 | 266 | CT01 |
+| `this` | 265 | 274 | 274 | CT01 |
+| `this` | 265 | 274 | 274 | CT01 |
+| `this.linhas` | 265 | 266 | 267 | CT01 |
+| `this.linhas` | 265 | 266 | 277 | CT01 |
+| `this.colunas` | 265 | 270 | 271 | CT01 |
+| `this.colunas` | 265 | 270 | 266 | CT01 |
+| `this.grade` | 265 | 274 | 274 | CT01 |
+| `this.grade` | 265 | 274 | 274 | CT01 |
+| `i` | 266 | 266 | 267 | CT01 |
+| `i` | 266 | 266 | 277 | **inalcançável** (Apêndice A) |
+| `i` | 266 | 267 | 268 | **inalcançável** (Apêndice A) |
+| `i` | 266 | 267 | 270 | CT01 |
+| `i` | 266 | 274 | 274 | CT01 |
+| `i` | 266 | 274 | 274 | CT01 |
+| `j` | 270 | 270 | 271 | CT01 |
+| `j` | 270 | 270 | 266 | **inalcançável** (Apêndice A) |
+| `j` | 270 | 271 | 272 | **inalcançável** (Apêndice A) |
+| `j` | 270 | 271 | 274 | CT01 |
+| `j` | 270 | 274 | 274 | CT01 |
+| `j` | 270 | 274 | 274 | CT02 |
+| `j` | 270 | 270 | 271 | CT01 |
+| `j` | 270 | 270 | 266 | CT01 |
+| `j` | 270 | 271 | 272 | CT01 |
+| `j` | 270 | 271 | 274 | **inalcançável** (Apêndice A) |
+| `j` | 270 | 274 | 274 | CT01 |
+| `j` | 270 | 274 | 274 | CT01 |
+| `i` | 266 | 266 | 267 | CT11 |
+| `i` | 266 | 266 | 277 | CT01 |
+| `i` | 266 | 267 | 268 | CT11 |
+| `i` | 266 | 267 | 270 | **inalcançável** (Apêndice A) |
+| `i` | 266 | 274 | 274 | CT11 |
+| `i` | 266 | 274 | 274 | CT11 |
+
+#### 4.3.12 `Jogo.executar`
+
+11 associações; todas cobertas.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `aquario` | 23 | 25 (arco para 26) | CT05 |
+| `entrada` | 23 | 29 (arco para 30) | CT01 |
+| `saida` | 23 | 29 (arco para 30) | CT01 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `aquario` | 23 | 34 | CT01 |
+| `aquario` | 23 | 35 | CT01 |
+| `saida` | 23 | 30 | CT01 |
+| `saida` | 23 | 34 | CT01 |
+| `saida` | 23 | 26 | CT05 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `aquario` | 23 | 25 | 26 | CT05 |
+| `aquario` | 23 | 25 | 29 | CT01 |
+| `entrada` | 23 | 29 | 30 | CT01 |
+| `entrada` | 23 | 29 | 23 | CT04 |
+| `saida` | 23 | 29 | 30 | CT01 |
+| `saida` | 23 | 29 | 23 | CT04 |
+
+#### 4.3.13 `Jogo.lerOpcao`
+
+9 associações; todas cobertas.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `saida` | 40 | 49 | CT25 |
+| `linha` | 41 | 42 (arco para 43) | CE09 |
+| `opcao` | 45 | 46 (arco para 46) | CT01 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `saida` | 40 | 49 | CT25 |
+| `linha` | 41 | 45 | CT01 |
+| `opcao` | 45 | 47 | CT01 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `linha` | 41 | 42 | 43 | CE09 |
+| `linha` | 41 | 42 | 45 | CT01 |
+| `opcao` | 45 | 46 | 46 | CT01 |
+| `opcao` | 45 | 46 | 47 | CT04 |
+| `opcao` | 45 | 46 | 47 | CT01 |
+| `opcao` | 45 | 46 | 49 | CT25 |
+
+#### 4.3.14 `Main.executar`
+
+40 associações, 37 cobertas, 3 inalcançáveis.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `entrada` | 27 | 50 | CE10 |
+| `saida` | 27 | 49 | CE10 |
+| `PARAMETROS` | 27 | 28 (arco para 29) | CE10 |
+| `valores` | 27 | 34 | CE10 |
+| `k` | 28 | 28 (arco para 29) | CE10 |
+| `linhas` | 34 | 39 (arco para 40) | CE10 |
+| `matriz` | 38 | 47 | CE10 |
+| `i` | 39 | 39 (arco para 40) | CE10 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `entrada` | 27 | 50 | CE10 |
+| `entrada` | 27 | 44 | CE10 |
+| `entrada` | 27 | 30 | CE10 |
+| `saida` | 27 | 49 | CE10 |
+| `saida` | 27 | 50 | CE10 |
+| `saida` | 27 | 40 | CE10 |
+| `saida` | 27 | 29 | CE10 |
+| `PARAMETROS` | 27 | 29 | CE10 |
+| `valores` | 27 | 34 | CE10 |
+| `valores` | 27 | 47 | CE10 |
+| `valores` | 27 | 30 | CE10 |
+| `k` | 28 | 29 | CE10 |
+| `k` | 28 | 30 | CE10 |
+| `k` | 28 | 28 | CE10 |
+| `k` | 28 | 29 | CE10 |
+| `k` | 28 | 30 | CE10 |
+| `k` | 28 | 28 | CE10 |
+| `matriz` | 38 | 47 | CE10 |
+| `matriz` | 38 | 44 | CE10 |
+| `matriz` | 38 | 42 | CE15 |
+| `i` | 39 | 40 | CE10 |
+| `i` | 39 | 39 | CE10 |
+| `i` | 39 | 40 | CE15 |
+| `i` | 39 | 39 | CE15 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `PARAMETROS` | 27 | 28 | 29 | CE10 |
+| `PARAMETROS` | 27 | 28 | 34 | CE10 |
+| `k` | 28 | 28 | 29 | CE10 |
+| `k` | 28 | 28 | 34 | **inalcançável** (Apêndice A) |
+| `k` | 28 | 28 | 29 | CE10 |
+| `k` | 28 | 28 | 34 | CE10 |
+| `linhas` | 34 | 39 | 40 | CE10 |
+| `linhas` | 34 | 39 | 47 | CE10 |
+| `i` | 39 | 39 | 40 | CE10 |
+| `i` | 39 | 39 | 47 | CE12 |
+| `i` | 39 | 41 | 42 | **inalcançável** (Apêndice A) |
+| `i` | 39 | 41 | 44 | CE10 |
+| `i` | 39 | 39 | 40 | CE15 |
+| `i` | 39 | 39 | 47 | CE10 |
+| `i` | 39 | 41 | 42 | CE15 |
+| `i` | 39 | 41 | 44 | **inalcançável** (Apêndice A) |
+
+#### 4.3.15 `Main.lerLinha`
+
+3 associações; todas cobertas.
+
+**todas-as-definições**
+
+| Variável | Definição (linha) | Uso exercitado (linha) | Caso |
+|---|---|---|---|
+| `linha` | 58 | 59 (arco para 59) | CE13 |
+
+**todos-os-c-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Caso |
+|---|---|---|---|
+| `linha` | 58 | 59 | CE10 |
+
+**todos-os-p-usos**
+
+| Variável | Definição (linha) | Uso (linha) | Arco para a linha | Caso |
+|---|---|---|---|---|
+| `linha` | 58 | 59 | 59 | CE13 |
+| `linha` | 58 | 59 | 59 | CE10 |
 
 ### 4.4 Casos de teste estruturais (TestSet-Estr)
 
@@ -470,7 +1669,7 @@ Cada ciclo registra o que foi escrito primeiro (teste), o resultado da execuçã
 | 3 | 22/11/2026 20:03 | nenhum (refatoração: os testes existentes precisam continuar verdes) | — | Removidas as verificações "não há célula para o filho" em `agirA` e `agirB`, que nunca podem ser verdadeiras pelas restrições R(C3, C4) e I(C9, C10) da revisão 1.1 da Parte I; o motivo ficou em comentário no código | 87/87 passam; JaCoCo 100% desvios, 99,8% instruções; BA-DUA 523/547 (95,6%) |
 | 4 | 22/11/2026 20:05 | nenhum (refatoração) | — | Construtor privado em `Main`, que o JaCoCo não conta como método a cobrir (antes, o construtor implícito aparecia como método não coberto) | 87/87 passam; JaCoCo 100% em instruções, desvios, linhas e métodos; BA-DUA 523/547 (95,6%) |
 
-**Correção de medição (22/11/2026 20:08).** Os percentuais do BA-DUA registrados antes desta data estavam inflados: o script de resumo contava o texto `covered="1"` no XML, que também aparece nos totalizadores por método. A contagem passou a somar o relatório de texto do BA-DUA (`badua.txt`), que é a contagem oficial da ferramenta, e todos os valores acima foram recalculados executando o script corrigido em cada commit. O XML não serve para contar porque agrupa pares que caem na mesma linha e omite variáveis sem nome no código.
+**Correção de medição (22/11/2026 20:08).** Os percentuais do BA-DUA registrados antes desta data estavam inflados: o script de resumo contava o texto `covered="1"` no XML, que também aparece nos totalizadores por método. A contagem passou a somar o relatório de texto do BA-DUA (`badua.txt`), que é a contagem oficial da ferramenta, e todos os valores acima foram recalculados executando o script corrigido em cada commit. O XML não serve para contar porque omite as 25 associações das variáveis que o compilador cria para os laços for-each, que não têm nome no código-fonte.
 
 ### 4.6 Cobertura final e requisitos inalcançáveis
 
@@ -486,8 +1685,21 @@ Cada ciclo registra o que foi escrito primeiro (teste), o resultado da execuçã
 
 *Figura 8 — Relatório HTML do JaCoCo com os dois conjuntos (linha de comando).*
 
+**[PRINT DO ECLIPSE: JUnit com TestSetFunc e TestSetEstr — 87/87 passando]**
 **[PRINT DO ECLIPSE: view Coverage do EclEmma com os dois conjuntos]**
 **[PRINT DO ECLIPSE: view do Baduíno com os dois conjuntos]**
+
+**Cobertura por classe — TestSet-Func + TestSet-Estr**
+
+**[PRINT DO ECLIPSE: código de Aquario.java colorido pelo EclEmma, TestSetFunc + TestSetEstr]**
+**[PRINT DO ECLIPSE: código de Jogo.java colorido pelo EclEmma, TestSetFunc + TestSetEstr]**
+**[PRINT DO ECLIPSE: código de Main.java colorido pelo EclEmma, TestSetFunc + TestSetEstr]**
+**[PRINT DO ECLIPSE: código de Peixe.java colorido pelo EclEmma, TestSetFunc + TestSetEstr]**
+**[PRINT DO ECLIPSE: código de Tipo.java colorido pelo EclEmma, TestSetFunc + TestSetEstr]**
+**[PRINT DO ECLIPSE: código de EntradaInvalidaException.java colorido pelo EclEmma, TestSetFunc + TestSetEstr]**
+**[PRINT DO ECLIPSE: view do Baduíno com os métodos de Aquario expandidos, TestSetFunc + TestSetEstr]**
+**[PRINT DO ECLIPSE: view do Baduíno com os métodos de Jogo expandidos, TestSetFunc + TestSetEstr]**
+**[PRINT DO ECLIPSE: view do Baduíno com os métodos de Main expandidos, TestSetFunc + TestSetEstr]**
 
 Os 24 pares definição-uso não cobertos são inalcançáveis e estão justificados um a um em `docs/pares-inalcancaveis.md`:
 
