@@ -3,7 +3,7 @@
 **Universidade Federal de Juiz de Fora — Departamento de Ciência da Computação**
 **DCC168 Teste de Software — 2026-3 — Prof. André Luiz de Oliveira**
 
-**Integrantes:** Igor Westermann, Hugo Priori e Laura Neves
+**Integrantes:** Hugo Amoglia Priori (202076035), Igor Westermann Lima (201876021) e Laura Neves (201976032)
 
 **Repositório:** https://github.com/priorihugo/testes-de-software
 
