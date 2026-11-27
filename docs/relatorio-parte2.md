@@ -510,19 +510,13 @@ Descontados os inalcançáveis, a cobertura dos pares alcançáveis é de 100% (
 
 ## 5. Análise pessoal: eficiência e eficácia das técnicas
 
-**[A PREENCHER PELO GRUPO]** — a especificação pede a análise do grupo. Fatos registrados neste trabalho que podem apoiar a análise:
-
-- O teste funcional (68 casos) não revelou defeitos e cobriu 81,1% das instruções e 84,8% dos pares definição-uso na versão final do código.
-- O que o teste funcional não alcançou foi principalmente a interface de console e variações de formato da entrada, que a especificação da Parte I não detalha.
-- O teste estrutural acrescentou 19 casos e levou o fluxo de controle a 100%. Revelou um defeito de validação (ciclo 2) e um teste mal especificado (CE12).
-- A análise manual de fluxo de dados identificou os mesmos pares inalcançáveis que o BA-DUA apontou, e as restrições da Parte I explicam vários deles.
-- A medição automática também pode errar: o script de resumo inflou o percentual do BA-DUA até ser conferido com o relatório da própria ferramenta.
+**[A PREENCHER PELO GRUPO: análise pessoal sobre a eficiência e a eficácia das técnicas de Teste Funcional e Estrutural para encontrar defeitos no programa]**
 
 ## 6. Pergunta ao grupo: influência dos casos funcionais (TDD)
 
-> "Ao desenvolver o programa, vocês sentiram que foram influenciados por terem criado os casos de teste funcionais primeiro? Se sim, como isso refletiu no código?"
+> "Ao desenvolver o programa, vocês sentiram que foram influenciados por terem criado os casos de teste funcionais primeiro (ou seja, aplicando o desenvolvimento dirigido por teste – do inglês – Test-Driven Development - TDD)? Se sim, como isso refletiu no código?"
 
-**[A PREENCHER PELO GRUPO]** — a resposta precisa refletir a experiência real do grupo. Fatos verificáveis: os casos funcionais foram especificados e entregues em 13/10/2026, e a implementação foi escrita em 22/11/2026 com auxílio de assistente de IA, já tendo os casos como alvo. A separação entre `Aquario`, `Jogo` e `Main` e a notação de matriz igual à da Parte I foram escolhidas para que os casos pudessem ser executados diretamente. Na Parte II-B, os testes foram escritos antes de cada mudança no código, como registra o diário.
+**[A PREENCHER PELO GRUPO: resposta à pergunta]**
 
 ## 7. Conclusão
 
