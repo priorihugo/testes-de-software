@@ -31,7 +31,7 @@
 
 Este relatório apresenta a Parte II do trabalho de DCC168 para o Jogo do Aquário: a implementação do programa em Java, a automatização em JUnit dos 68 casos de teste funcionais especificados na Parte I (TestSet-Func) e a aplicação dos critérios de teste estrutural baseados em fluxo de controle e em fluxo de dados, que levou a 19 casos adicionais (TestSet-Estr).
 
-A especificação usada é a revisão 1.1 do documento da Parte I. As decisões de projeto D01–D11 definidas lá (vizinhança ortogonal, ordem de atualização, desempates e contadores) determinam as saídas esperadas e foram seguidas na implementação. Decisões novas surgidas durante a Parte II são registradas como D12–D15 na revisão 1.2.
+A especificação usada é o documento da Parte I. As decisões de projeto D01–D11 definidas lá (vizinhança ortogonal, ordem de atualização, desempates e contadores) determinam as saídas esperadas e foram seguidas na implementação. As decisões novas surgidas durante a Parte II (D12–D15: limite de inteiros, formato dos parâmetros, colchetes da matriz e fim da entrada) foram incorporadas na revisão 1.2 do documento, que também registra a execução dos 68 casos na coluna Saída Obtida.
 
 A cobertura foi medida com o JaCoCo, motor do EclEmma, e com o BA-DUA, motor do Baduíno, pela linha de comando (`scripts/cobertura.sh`). Os números e as figuras oficiais do EclEmma e do Baduíno vêm da execução no Eclipse, registrada nas seções 3 e 4.6.
 
